@@ -26,6 +26,14 @@ export class LoginPage extends BasePage {
     await this.page.waitForLoadState('networkidle');
   }
 
+  /**
+   * Waits for navigation after login to complete
+   */
+  async waitForPostLoginNavigation(): Promise<void> {
+    await this.page.waitForURL('**/web/**', { timeout: 10000 });
+    await this.page.waitForLoadState('networkidle');
+  }
+
   async fillLoginForm(email: string | null, password: string | null): Promise<void> {
     if (email !== null) await this.emailInput.fill(email);
     if (password !== null) await this.passwordInput.fill(password);
@@ -33,8 +41,10 @@ export class LoginPage extends BasePage {
 
   async clickLogin(): Promise<void> {
     await this.loginButton.scrollIntoViewIfNeeded();
+    await this.loginButton.waitFor({ state: 'visible' });
     await this.loginButton.click();
-    await this.page.waitForTimeout(1000);
+    // Wait for navigation to start (login redirects)
+    await this.page.waitForLoadState('domcontentloaded');
   }
 
   async login(email: string, password: string): Promise<void> {

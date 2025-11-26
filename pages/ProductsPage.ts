@@ -27,10 +27,51 @@ export class ProductsPage extends BasePage {
     this.noProductsMessage = page.locator('text=No products found');
   }
 
+  /**
+   * Navigates to the products page and waits for it to load
+   * Handles navigation conflicts by checking current URL first
+   */
+  /**
+   * Waits for navigation to products page to complete
+   */
+  async waitForProductsPageNavigation(): Promise<void> {
+    await this.page.waitForURL('**/web/products**', { timeout: 10000 });
+  }
+
   async navigateTo(): Promise<void> {
-    await this.page.goto('/web/products');
-    await this.page.waitForLoadState('networkidle');
-    await this.page.waitForTimeout(1000);
+    const targetUrl = '/web/products';
+    const currentUrl = this.page.url();
+    
+    // If already on the products page, just wait for it to be ready
+    if (currentUrl.includes('/web/products')) {
+      await this.page.waitForLoadState('networkidle');
+      await this.pageHeading.waitFor({ state: 'visible', timeout: 10000 }).catch(() => {});
+      return;
+    }
+    
+    // Wait for any ongoing navigation to complete before starting a new one
+    try {
+      await this.page.waitForLoadState('networkidle', { timeout: 5000 });
+    } catch {
+      // If navigation is in progress, wait for it to complete
+      await this.page.waitForLoadState('load', { timeout: 10000 });
+    }
+    
+    // Navigate to products page with proper error handling
+    try {
+      await this.page.goto(targetUrl, { waitUntil: 'networkidle', timeout: 30000 });
+    } catch (error) {
+      // If navigation was interrupted, wait for the page to settle
+      if (error instanceof Error && error.message.includes('interrupted')) {
+        await this.page.waitForURL('**/web/products**', { timeout: 15000 });
+        await this.page.waitForLoadState('networkidle');
+      } else {
+        throw error;
+      }
+    }
+    
+    // Wait for page heading to be visible
+    await this.pageHeading.waitFor({ state: 'visible', timeout: 10000 });
   }
 
   async searchProduct(searchTerm: string): Promise<void> {

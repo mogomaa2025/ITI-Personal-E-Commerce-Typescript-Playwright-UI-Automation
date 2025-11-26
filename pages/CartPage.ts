@@ -1,4 +1,4 @@
-import { Page, Locator } from '@playwright/test';
+import { Page, Locator, expect } from '@playwright/test';
 import { BasePage } from './BasePage';
 
 export class CartPage extends BasePage {
@@ -66,6 +66,20 @@ export class CartPage extends BasePage {
   async navigateTo(): Promise<void> {
     // Use the base page cart navigation which maintains session state
     await this.navigateToCart();
+  }
+
+  /**
+   * Waits for cart page to be fully loaded
+   */
+  async waitForCartPageLoad(): Promise<void> {
+    await this.page.waitForLoadState('networkidle');
+  }
+
+  /**
+   * Waits for navigation to orders page after checkout
+   */
+  async waitForOrdersPageNavigationAfterCheckout(): Promise<void> {
+    await this.page.waitForURL('**/web/orders**', { timeout: 15000 });
   }
 
   async isCartEmpty(): Promise<boolean> {
@@ -253,7 +267,7 @@ export class CartPage extends BasePage {
     // Wait for navigation to orders page
     // The page should navigate after the order is placed
     try {
-      await this.page.waitForURL('**/web/orders', { timeout: 10000 });
+      await this.page.waitForURL('**/web/orders**', { timeout: 10000 });
     } catch (error) {
       // If URL doesn't change immediately, wait for network activity to complete
       await this.page.waitForLoadState('networkidle');
@@ -325,5 +339,28 @@ export class CartPage extends BasePage {
     this.page.on('dialog', async dialog => {
       await dialog.accept();
     });
+  }
+
+  /**
+   * Validates that cart total matches the expected product price
+   * This method performs all validations using Playwright's expect
+   * @param expectedProductPrice - The expected product price (e.g., "$99.99")
+   */
+  async validateCartTotalMatchesProductPrice(expectedProductPrice: string): Promise<void> {
+    const cartTotal = await this.getCartTotal();
+    
+    // Validate cart total exists
+    expect(cartTotal).not.toBeNull();
+    
+    if (!cartTotal) {
+      throw new Error('Cart validation failed: cart total is null');
+    }
+    
+    // Parse and compare prices
+    const productPriceNum = parseFloat(expectedProductPrice.replace('$', '').trim());
+    const cartPriceNum = parseFloat(cartTotal.replace('$', '').trim());
+    
+    // Validate prices match
+    expect(cartPriceNum).toBeCloseTo(productPriceNum, 2);
   }
 }

@@ -12,7 +12,14 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "types": ["node", "@playwright/test"],
-    "lib": ["ESNext", "DOM"]
+    "lib": ["ESNext", "DOM"],
+    "baseUrl": ".",
+    "paths": {
+      "@pages/*": ["pages/*"],
+      "@tests/*": ["tests/*"],
+      "@utils/*": ["utils/*"],
+      "@data/*": ["data/*"]
+    }
   },
   "include": [
     "tests/**/*.ts",
