@@ -1,0 +1,19 @@
+{
+  "admin": {
+    "email": "admin@test.com",
+    "password": "admin123",
+    "role": "admin"
+  },
+  "validUser": {
+    "email": "test@test.test",
+    "password": "test@123",
+    "role": "user"
+  },
+  "newUser": {
+    "name": "John Doe",
+    "email": "newuser@test.com",
+    "password": "pass123",
+    "phone": "+1234567890",
+    "address": "123 Main Street, New York, NY 10001"
+  }
+}

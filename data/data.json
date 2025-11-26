@@ -1,0 +1,123 @@
+{
+  "register": {
+    "validData": {
+      "name": "Test User Full Name",
+      "email": "testuser@example.com",
+      "password": "test123",
+      "phone": "+1234567890",
+      "address": "123 Test Street, City, Country"
+    },
+    "invalidName": {
+      "tooShort": "AB",
+      "empty": ""
+    },
+    "invalidEmail": {
+      "noAt": "invalidemail.com",
+      "empty": ""
+    },
+    "invalidPassword": {
+      "tooShort": "12345",
+      "noNumber": "password",
+      "noLetter": "123456"
+    },
+    "invalidPhone": {
+      "tooShort": "+123456",
+      "tooLong": "+123456789012345678901",
+      "withLetters": "abc1234567",
+      "empty": ""
+    }
+  },
+  "login": {
+    "validCredentials": {
+      "email": "test@test.test",
+      "password": "test@123"
+    },
+    "invalidCredentials": {
+      "wrongEmail": "wrong@test.com",
+      "wrongPassword": "wrongpass"
+    },
+    "invalidEmail": {
+      "noAt": "invalidemail.com"
+    }
+  },
+  "products": {
+    "searchTerms": {
+      "valid": "Laptop",
+      "noResults": "NonExistentProduct12345"
+    },
+    "categories": [
+      "Electronics",
+      "Clothing",
+      "Books",
+      "Home & Garden",
+      "Accessories"
+    ],
+    "priceFilters": {
+      "valid": {
+        "min": 50,
+        "max": 500
+      },
+      "invalid": {
+        "minGreaterThanMax": {
+          "min": 500,
+          "max": 50
+        },
+        "negative": {
+          "min": -10,
+          "max": 100
+        }
+      }
+    }
+  },
+  "cart": {
+    "shippingAddresses": {
+      "valid": "123 Main Street, New York, NY 10001",
+      "invalid": "",
+      "boundaryMin": "A",
+      "boundaryMax": "This is a very long address that exceeds normal limits and might cause validation issues if the system has character limits"
+    },
+    "quantities": {
+      "valid": {
+        "min": 1,
+        "max": 99,
+        "boundaryMin": 1,
+        "boundaryMax": 99
+      },
+      "invalid": {
+        "zero": 0,
+        "negative": -5,
+        "excessive": 1000
+      }
+    }
+  },
+  "messages": {
+    "register": {
+      "nameShort": "Name must be at least 3 characters long",
+      "fillData": "please fil data",
+      "invalidEmail": "Invalid email format",
+      "passwordShort": "Password must be at least 6 characters",
+      "passwordNoNumber": "Password must contain at least one number",
+      "passwordNoLetter": "Password must contain at least one letter",
+      "phoneRequired": "Phone number is required",
+      "phoneInvalid": "Phone number must contain only numbers and +",
+      "phoneLength": "Phone number must be between 8 and 20 characters",
+      "addressRequired": "Address is required",
+      "userExists": "User already exists",
+      "successRegister": "Registration successful"
+    },
+    "login": {
+      "fillData": "please fil data",
+      "invalidEmail": "Invalid email format",
+      "invalidCredentials": "Invalid credentials",
+      "successLogin": "Login successful"
+    },
+    "cart": {
+      "addedToCart": "Added to cart!",
+      "loginRequired": "Please login to add items to cart",
+      "emptyCart": "Your cart is empty",
+      "quantityUpdated": "Quantity updated",
+      "itemRemoved": "Item removed from cart",
+      "cartCleared": "Cart cleared successfully"
+    }
+  }
+}

@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+
+# Test Reports
+playwright-report/
+monocart-report/
+test-results/
+
+# Environment files
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Playwright
+playwright/.auth/
+playwright/.cache/
+
+# Build
+dist/
+build/

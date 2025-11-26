@@ -1,0 +1,49 @@
+Test ID,Test Objective,Test Case Details,Test Data,Pre-Condition,Test Steps,Post-Condition,Expected Results,Actual Results
+ORD-001,Verify Guest User Access to Orders,Check that guest user sees login message when accessing orders page,N/A,Guest user (not logged in),"1. Navigate to http://127.0.0.1:5000/web/orders
+2. Check for alert message",Page remains on orders page,Alert message 'Please login to continue' should be displayed,
+ORD-002,Verify Admin Login and Navigation,Login as admin and navigate to admin dashboard from navbar,admin credentials: admin@test.com / admin123,User logged out,"1. Login as admin
+2. Click Admin link from navbar
+3. Verify admin dashboard loads",User is on admin dashboard,Admin dashboard should be accessible and display dashboard elements,
+ORD-003,Verify Admin Dashboard Stats,Save Total Orders and Total Revenue from admin dashboard,N/A,Admin logged in and on admin dashboard,"1. Navigate to admin dashboard
+2. Read Total Orders value
+3. Read Total Revenue value
+4. Save both values",Values saved for later comparison,Total Orders and Total Revenue should be displayed and saved successfully,
+ORD-004,Verify User Login and Product Navigation,login as regular user then navigate to products,user credentials: test@test.test / test@123,Admin logged in,1. Login as regular user 2. Navigate to http://127.0.0.1:5000/web/products,User is logged in and on products page,User should be logged in and products page should load,
+ORD-005,Verify Add Products to Cart,Add products to cart and save their prices,Multiple products,N/A,"1. Navigate to products page
+2. Add multiple products to cart
+3. Save product prices from cart",Products added to cart and prices saved,Prices should be saved for later verification in orders page,
+ORD-006,Verify Cart Navigation,Navigate to cart page,N/A,Products in cart,"1. Navigate to http://127.0.0.1:5000/web/cart
+2. Verify cart page loads",User is on cart page,Cart page should display added products,
+ORD-007,Verify Checkout Process,Click Proceed to Checkout button,N/A,Products in cart,"1. Click 'Proceed to Checkout' button
+2. Verify checkout page loads",User is on checkout page,Checkout page should be displayed,
+ORD-008,Verify Shipping Address Entry,Enter valid shipping address and complete checkout,shipping address: valid address string,User on checkout page,"1. Enter valid shipping address
+2. Submit checkout form
+3. Verify navigation to orders page",User is automatically navigated to orders page,Should navigate to http://127.0.0.1:5000/web/orders automatically,
+ORD-009,Verify Order Price Match,Check that order price matches saved cart price,Saved cart price from step 5,User on orders page with new order,"1. Find the new order on orders page
+2. Compare order total with saved cart price
+3. Verify they match",Order displayed on page,Order total should match the saved cart price exactly,
+ORD-010,Verify Order Tabs Display,Check that all order status tabs are displayed,N/A,User on orders page,"1. Verify All tab is visible
+2. Verify Pending tab is visible
+3. Verify Processing tab is visible
+4. Verify Shipped tab is visible
+5. Verify Delivered tab is visible",All tabs visible,All tabs (All; Pending; Processing; Shipped; Delivered) should be displayed,
+ORD-011,Verify Pending Tab and Status,Click Pending tab and verify order status is Pending,N/A,User on orders page with pending order,"1. Click on Pending tab
+2. Verify order is displayed
+3. Check order status",Order displayed in Pending tab,Order status should be 'Pending',
+ORD-012,Verify Order Details in Pending Tab,Check order details (date; total; items count; product names) in Pending tab,N/A,User on Pending tab with order,"1. Verify order date is displayed
+2. Verify order total is displayed
+3. Verify number of items is displayed
+4. Verify product names are correct",Order details visible,Order date; total; number of items; and product names should all be correct,
+ORD-013,Verify Cancel Order Button,Click Cancel Order button in Pending tab,N/A,User on Pending tab with order,"1. Click Cancel Order button
+2. Alert dialog appears",Alert dialog displayed,Alert dialog should appear asking for confirmation,
+ORD-014,Verify Cancel Order Dismiss,Click cancel/dismiss in alert dialog and verify order remains pending,N/A,Alert dialog displayed from cancel order,"1. Click Cancel/Dismiss in alert dialog
+2. Verify order still exists
+3. Verify order status is still Pending",Order remains in Pending status,Order should remain in Pending status; no changes should occur,
+ORD-015,Verify Cancel Order Retry,Click Cancel Order button again,N/A,Order still in Pending status,"1. Click Cancel Order button again
+2. Alert dialog appears",Alert dialog displayed again,Alert dialog should appear again,
+ORD-016,Verify Cancel Order Confirmation,Click OK/Confirm in alert to cancel order,N/A,Alert dialog displayed,"1. Click OK/Confirm in alert dialog
+2. Wait for cancellation to process
+3. Verify inline alert appears",Order cancelled and alert displayed,Inline alert 'Order cancelled' should be displayed,
+ORD-017,Verify No Orders After Cancellation,Check that no orders remain in Pending tab after cancellation,N/A,Order cancelled in Pending tab,"1. Verify Pending tab is active
+2. Check for orders
+3. Verify 'No orders found' message",No orders in Pending tab,Label 'No orders found' should be displayed in Pending tab,

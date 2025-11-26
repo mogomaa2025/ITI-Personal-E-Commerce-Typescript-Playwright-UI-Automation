@@ -1,0 +1,32 @@
+{
+  "name": "playwright-ecommerce-tests",
+  "version": "1.0.0",
+  "description": "Comprehensive Playwright test suite for E-Commerce application with TypeScript",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:register": "playwright test tests/register.spec.ts",
+    "test:login": "playwright test tests/login.spec.ts",
+    "test:homepage": "playwright test tests/homepage.spec.ts",
+    "test:products": "playwright test tests/products.spec.ts",
+    "report": "playwright show-report",
+    "test:debug": "playwright test --debug",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "playwright",
+    "testing",
+    "e2e",
+    "pom",
+    "data-driven",
+    "typescript"
+  ],
+  "author": "Test Automation Engineer",
+  "license": "MIT",
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "@types/node": "^24.10.1",
+    "monocart-reporter": "^2.9.23",
+    "typescript": "^5.9.3"
+  }
+}

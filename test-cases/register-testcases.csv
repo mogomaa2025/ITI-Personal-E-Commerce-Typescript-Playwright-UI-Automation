@@ -1,0 +1,97 @@
+Test ID,Test Objective,Test Case Details,Test Data,Pre-Condition,Test Steps,Post-Condition,Expected Results,Actual Results
+REG-001,Verify Register Page UI,Validate all UI elements are visible on register page,N/A,User not logged in,"1. Navigate to /web/register
+2. Verify page title is visible
+3. Verify all input fields are visible
+4. Verify register button is visible
+5. Verify login link is visible",Page remains on register,All elements should be visible and correctly labeled,
+REG-002,Verify Form Labels,Validate all form field labels are correctly displayed,N/A,User not logged in,"1. Navigate to /web/register
+2. Check Full Name label
+3. Check Email Address label
+4. Check Password label
+5. Check Phone Number label
+6. Check Address label",Page remains on register,All labels should be visible with correct text,
+REG-003,Verify Password Hidden,Validate password field masks input,password: testpass123,User not logged in,"1. Navigate to /web/register
+2. Enter text in password field
+3. Verify field type is password",Page remains on register,Password characters should be masked,
+REG-004,Verify Login Link Navigation,Validate login link redirects to login page,N/A,User not logged in,"1. Navigate to /web/register
+2. Click on 'Login here' link
+3. Verify URL changes to /web/login",User navigated to login page,Should redirect to login page successfully,
+REG-005,Validate Name Too Short,Test name validation with less than 3 characters,name: AB,User not logged in,"1. Navigate to /web/register
+2. Enter 2 character name
+3. Fill other valid fields
+4. Click Register
+5. Wait for alert",Page remains on register,Alert: 'Name must be at least 3 characters long',
+REG-006,Validate Name Boundary (3 chars),Test name validation at minimum boundary,name: ABC,User not logged in,"1. Navigate to /web/register
+2. Enter exactly 3 character name
+3. Fill other valid fields
+4. Click Register",Depends on other validations,Should accept 3 character name,
+REG-007,Validate Empty Name,Test empty name field validation,name: empty,User not logged in,"1. Navigate to /web/register
+2. Leave name field empty
+3. Fill other valid fields
+4. Click Register",Page remains on register,Should show validation error or HTML5 validation,
+REG-008,Validate Email Without @,Test email validation without @ symbol,email: invalidemail.com,User not logged in,"1. Navigate to /web/register
+2. Enter email without @
+3. Fill other valid fields
+4. Click Register",Page remains on register,Should show invalid email format error,
+REG-009,Validate Empty Email,Test empty email field validation,email: empty,User not logged in,"1. Navigate to /web/register
+2. Leave email field empty
+3. Fill other valid fields
+4. Click Register",Page remains on register,Should show validation error,
+REG-010,Validate Short Password,Test password with less than 6 characters,password: 12345,User not logged in,"1. Navigate to /web/register
+2. Enter 5 character password
+3. Fill other valid fields
+4. Click Register",Page remains on register,Should show password too short error,
+REG-011,Validate Password Boundary (6 chars),Test password at minimum length,password: test12,User not logged in,"1. Navigate to /web/register
+2. Enter exactly 6 character password
+3. Fill other valid fields
+4. Click Register",Depends on other validations,Should accept 6 character password,
+REG-012,Validate Password Without Number,Test password without numeric character,password: password,User not logged in,"1. Navigate to /web/register
+2. Enter password with only letters
+3. Fill other valid fields
+4. Click Register",Page remains on register,Should show error: Password must contain at least one number,
+REG-013,Validate Password Without Letter,Test password without alphabetic character,password: 123456,User not logged in,"1. Navigate to /web/register
+2. Enter password with only numbers
+3. Fill other valid fields
+4. Click Register",Page remains on register,Should show error: Password must contain at least one letter,
+REG-014,Validate Empty Password,Test empty password field,password: empty,User not logged in,"1. Navigate to /web/register
+2. Leave password field empty
+3. Fill other valid fields
+4. Click Register",Page remains on register,Should show validation error,
+REG-015,Validate Short Phone Number,Test phone with less than 8 characters,phone: +123456,User not logged in,"1. Navigate to /web/register
+2. Enter phone with 7 characters
+3. Fill other valid fields
+4. Click Register",Page remains on register,Should show phone length error,
+REG-016,Validate Phone Boundary (8 chars),Test phone at minimum length,phone: +1234567,User not logged in,"1. Navigate to /web/register
+2. Enter exactly 8 character phone
+3. Fill other valid fields
+4. Click Register",Depends on other validations,Should accept 8 character phone,
+REG-017,Validate Long Phone Number,Test phone with more than 20 characters,phone: +123456789012345678901,User not logged in,"1. Navigate to /web/register
+2. Enter phone with 21+ characters
+3. Fill other valid fields
+4. Click Register",Page remains on register,Should show phone length error,
+REG-018,Validate Phone Boundary (20 chars),Test phone at maximum length,phone: +12345678901234567890,User not logged in,"1. Navigate to /web/register
+2. Enter exactly 20 character phone
+3. Fill other valid fields
+4. Click Register",Depends on other validations,Should accept 20 character phone,
+REG-019,Validate Phone With Letters,Test phone with alphabetic characters,phone: abc1234567,User not logged in,"1. Navigate to /web/register
+2. Enter phone with letters
+3. Fill other valid fields
+4. Click Register",Page remains on register,Should show error: Phone must contain only numbers and +,
+REG-020,Validate Empty Phone,Test empty phone field,phone: empty,User not logged in,"1. Navigate to /web/register
+2. Leave phone field empty
+3. Fill other valid fields
+4. Click Register",Page remains on register,Should show error: Phone number is required,
+REG-021,Validate Empty Address,Test empty address field,address: empty,User not logged in,"1. Navigate to /web/register
+2. Leave address field empty
+3. Fill other valid fields
+4. Click Register",Page remains on register,Should show error: Address is required,
+REG-022,Validate All Empty Fields,Test form submission with all empty fields,All fields: empty,User not logged in,"1. Navigate to /web/register
+2. Click Register without filling any fields",Page remains on register,Should show validation errors or HTML5 validation,
+REG-023,Successful Registration,Test successful user registration with all valid data,"name: John Doe, email: unique@test.com, password: test123, phone: +1234567890, address: 123 Test Street",User not logged in,"1. Navigate to /web/register
+2. Fill all fields with valid data
+3. Click Register
+4. Wait for response",User registered and redirected to login,Should show success message and redirect to /web/login,
+REG-024,Register Existing User,Test registration with already registered email,email: test@test.test,User not logged in,"1. Navigate to /web/register
+2. Fill form with existing user email
+3. Fill other valid fields
+4. Click Register",Page remains on register,Should show error: User already exists,
