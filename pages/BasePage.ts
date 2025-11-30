@@ -19,7 +19,8 @@ export class BasePage {
   readonly logoutButton: Locator;
   readonly footer: Locator;
   readonly alertContainer: Locator;
-
+  readonly cartBadge: Locator;
+  
   constructor(page: Page) {
     this.page = page;
     this.logo = page.locator('a:has-text("E-Commerce Store")');
@@ -39,6 +40,7 @@ export class BasePage {
     this.logoutButton = page.locator('button:has-text("Logout")');
     this.footer = page.locator('footer');
     this.alertContainer = page.locator('.alert');
+    this.cartBadge = page.locator('#cart-count');
   }
 
   async scrollToElement(locator: Locator): Promise<void> {
@@ -88,7 +90,7 @@ export class BasePage {
     if (!isVisible) {
       // Try navigating to home or products page where logout should be visible
       await this.page.goto('/', { waitUntil: 'networkidle' });
-      await this.page.waitForTimeout(1000);
+      await this.page.waitForLoadState('networkidle');
       // Check again after navigation
       const isVisibleAfterNav = await this.logoutButton.isVisible({ timeout: 2000 }).catch(() => false);
       if (!isVisibleAfterNav) {
@@ -140,11 +142,30 @@ export class BasePage {
     }
   }
 
+  async acceptDialogListener(): Promise<void> {
+    
+    this.page.once('dialog', async dialog => {
+      console.log(`Dialog message: ${dialog.message()}`);
+      await dialog.accept(); // Or dialog.dismiss() to click 'Cancel'
+    });
+
+  }
+
+  async rejectDialogListener(): Promise<void> {
+    
+    this.page.once('dialog', async dialog => {
+      console.log(`Dialog message: ${dialog.message()}`);
+      await dialog.accept(); // Or dialog.dismiss() to click 'Cancel'
+    });
+
+  }
+
+
   async clearCart(): Promise<void> {
     try {
       // Navigate to cart page
       await this.page.goto('/web/cart', { waitUntil: 'networkidle', timeout: 30000 });
-      await this.page.waitForTimeout(1500);
+      await this.page.waitForLoadState('networkidle');
       
       // Try multiple possible selectors for remove button
       const possibleSelectors = [
@@ -174,7 +195,7 @@ export class BasePage {
         while (count > 0) {
           await removeButtons.first().scrollIntoViewIfNeeded();
           await removeButtons.first().click();
-          await this.page.waitForTimeout(1000);
+          await this.page.waitForLoadState('networkidle');
           count = await removeButtons.count();
           console.log(`Removed item, ${count} items remaining`);
         }

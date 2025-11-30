@@ -15,5 +15,40 @@
     "password": "pass123",
     "phone": "+1234567890",
     "address": "123 Main Street, New York, NY 10001"
+  },
+  "cartUser": {
+    "email": "test_i54jex18@gmail.com",
+    "password": "Gomaa@123",
+    "role": "user"
+  },
+  "homeUser": {
+    "email": "test_8dkki1ij@gmail.com",
+    "password": "Gomaa@123",
+    "role": "user"
+  },
+  "loginUser": {
+    "email": "test_agsh4r8d@gmail.com",
+    "password": "Gomaa@123",
+    "role": "user"
+  },
+  "ordersUser": {
+    "email": "test_e5a5s07a@gmail.com",
+    "password": "Gomaa@123",
+    "role": "user"
+  },
+  "productDetialsUser": {
+    "email": "test_9wevtjzz@gmail.com",
+    "password": "Gomaa@123",
+    "role": "user"
+  },
+  "productsxUser": {
+    "email": "test_yxq0djm8@gmail.com",
+    "password": "Gomaa@123",
+    "role": "user"
+  },
+  "registerUser": {
+    "email": "test_hey0ccw7@gmail.com",
+    "password": "Gomaa@123",
+    "role": "user"
   }
 }

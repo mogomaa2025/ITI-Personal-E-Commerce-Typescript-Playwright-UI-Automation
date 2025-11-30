@@ -132,9 +132,11 @@ export class CartPage extends BasePage {
   }
 
   async removeItemByIndex(index: number): Promise<void> {
-    const removeBtn = this.btnRemove.nth(index);
-    await this.scrollToElement(removeBtn);
-    await removeBtn.click();
+   // const removeBtn = this.btnRemove.nth(index);
+   // await this.scrollToElement(removeBtn);
+   // await removeBtn.click();
+    await this.scrollToElement(this.page.getByRole('button', { name: '×' }));
+    await this.page.getByRole('button', { name: '×' }).first().click();
     await this.page.waitForTimeout(1000);
   }
 

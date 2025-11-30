@@ -1,0 +1,21 @@
+{
+    "name": "playwright-project",
+    "version": "1.0.0",
+    "description": "Playwright tests configuration.",
+    "main": "index.js",
+    "scripts": {
+      "test:all": "npx playwright test",
+      "test:ui": "npx playwright test --ui",
+      "test:report": "npx playwright show-report"
+    },
+    "keywords": [
+      "playwright",
+      "automation",
+      "e2e"
+    ],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+      "@playwright/test": "^1.40.0"
+    }
+  }

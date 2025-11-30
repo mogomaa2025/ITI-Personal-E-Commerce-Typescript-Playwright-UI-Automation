@@ -90,61 +90,150 @@ export class ProductsPage extends BasePage {
     await this.maxPriceInput.fill(price.toString());
   }
 
+  /**
+   * Applies the selected filters to the product list
+   */
   async applyFilters(): Promise<void> {
-    await this.applyFiltersButton.scrollIntoViewIfNeeded();
-    await this.applyFiltersButton.click();
-    await this.page.waitForTimeout(1000);
+    try {
+      await this.applyFiltersButton.scrollIntoViewIfNeeded();
+      await this.applyFiltersButton.waitFor({ state: 'visible' });
+      await this.applyFiltersButton.click();
+      // Wait for the page to update after filtering
+      await this.page.waitForLoadState('networkidle');
+    } catch (error: any) {
+      throw new Error(`Failed to apply filters: ${error.message}`);
+    }
   }
 
+  /**
+   * Clears all applied filters
+   */
   async clearFilters(): Promise<void> {
-    await this.clearButton.scrollIntoViewIfNeeded();
-    await this.clearButton.click();
-    await this.page.waitForTimeout(1000);
+    try {
+      await this.clearButton.scrollIntoViewIfNeeded();
+      await this.clearButton.waitFor({ state: 'visible' });
+      await this.clearButton.click();
+      // Wait for the page to update after clearing filters
+      await this.page.waitForLoadState('networkidle');
+    } catch (error: any) {
+      throw new Error(`Failed to clear filters: ${error.message}`);
+    }
   }
 
+  /**
+   * Gets the count of products displayed on the page
+   */
   async getProductCount(): Promise<number> {
-    await this.page.waitForTimeout(500);
-    return await this.productCards.count();
+    try {
+      // Wait for product cards to be attached to the DOM
+      await this.productCards.first().waitFor({ state: 'attached', timeout: 5000 });
+      return await this.productCards.count();
+    } catch (error: any) {
+      // If no products are found, return 0
+      return 0;
+    }
   }
 
+  /**
+   * Gets product details at the specified index
+   * @param index - The index of the product card to get details for
+   */
   async getProductByIndex(index: number): Promise<{ name: string | null; category: string | null; price: string | null; stock: string | null; card: Locator }> {
-    const card = this.productCards.nth(index);
-    return {
-      name: await card.locator('h3').first().textContent(),
-      category: await card.locator('p').first().textContent(),
-      price: await card.locator('p:has-text("$")').first().textContent(),
-      stock: await card.locator('p:has-text("Stock:")').first().textContent(),
-      card: card
-    };
+    try {
+      const card = this.productCards.nth(index);
+      await card.waitFor({ state: 'visible', timeout: 5000 });
+
+      // Wait for each element inside the card to be visible
+      const nameLocator = card.locator('h3').first();
+      await nameLocator.waitFor({ state: 'visible', timeout: 2000 });
+      const name = await nameLocator.textContent();
+
+      const categoryLocator = card.locator('p').first();
+      await categoryLocator.waitFor({ state: 'visible', timeout: 2000 });
+      const category = await categoryLocator.textContent();
+
+      const priceLocator = card.locator('p:has-text("$")').first();
+      await priceLocator.waitFor({ state: 'visible', timeout: 2000 });
+      const price = await priceLocator.textContent();
+
+      const stockLocator = card.locator('p:has-text("Stock:")').first();
+      await stockLocator.waitFor({ state: 'visible', timeout: 2000 });
+      const stock = await stockLocator.textContent();
+
+      return {
+        name,
+        category,
+        price,
+        stock,
+        card: card
+      };
+    } catch (error: any) {
+      throw new Error(`Failed to get product by index ${index}: ${error.message}`);
+    }
   }
 
+  /**
+   * Clicks the "View Details" button for a product at the specified index
+   * @param index - The index of the product card to view details for
+   */
   async clickViewDetails(index: number): Promise<void> {
-    const card = this.productCards.nth(index);
-    await card.scrollIntoViewIfNeeded();
-    const viewDetailsBtn = card.locator('a:has-text("View Details")').first();
-    await viewDetailsBtn.scrollIntoViewIfNeeded();
-    await viewDetailsBtn.click();
-    await this.page.waitForLoadState('networkidle');
+    try {
+      const card = this.productCards.nth(index);
+      await card.scrollIntoViewIfNeeded();
+      await card.waitFor({ state: 'visible' });
+
+      const viewDetailsBtn = card.locator('a:has-text("View Details")').first();
+      await viewDetailsBtn.scrollIntoViewIfNeeded();
+      await viewDetailsBtn.waitFor({ state: 'visible' });
+      await viewDetailsBtn.click();
+
+      // Wait for navigation to product details page
+      await this.page.waitForLoadState('networkidle');
+    } catch (error: any) {
+      throw new Error(`Failed to click view details for product at index ${index}: ${error.message}`);
+    }
   }
 
+  /**
+   * Clicks the "Add to Cart" button for a product at the specified index
+   * @param index - The index of the product card to add to cart
+   * @returns The initial cart count before adding the product
+   */
   async clickAddToCart(index: number): Promise<number> {
-    const card = this.productCards.nth(index);
-    await card.scrollIntoViewIfNeeded();
-    const initialCartCount = await this.getCartBadgeCount();
-    const addToCartBtn = card.locator('button:has-text("Add to Cart")').first();
-    await addToCartBtn.scrollIntoViewIfNeeded();
-    await addToCartBtn.click();
-    await this.page.waitForTimeout(500);
-    return initialCartCount;
+    try {
+      const card = this.productCards.nth(index);
+      await card.scrollIntoViewIfNeeded();
+      const initialCartCount = await this.getCartBadgeCount();
+      const addToCartBtn = card.locator('button:has-text("Add to Cart")').first();
+      await addToCartBtn.scrollIntoViewIfNeeded();
+      await addToCartBtn.waitFor({ state: 'visible' });
+      await addToCartBtn.click();
+
+      // Wait for any UI updates after clicking add to cart
+      await this.page.waitForLoadState('networkidle');
+      return initialCartCount;
+    } catch (error: any) {
+      throw new Error(`Failed to click add to cart for product at index ${index}: ${error.message}`);
+    }
   }
 
+  /**
+   * Clicks the like button for a product at the specified index
+   * @param index - The index of the product card to like
+   */
   async clickLikeButton(index: number): Promise<void> {
-    const card = this.productCards.nth(index);
-    await card.scrollIntoViewIfNeeded();
-    const likeButton = card.locator('button:has-text("Like"), button:has-text("Liked")').first();
-    await likeButton.scrollIntoViewIfNeeded();
-    await likeButton.click();
-    await this.page.waitForTimeout(500);
+    try {
+      const card = this.productCards.nth(index);
+      await card.scrollIntoViewIfNeeded();
+      const likeButton = card.locator('button:has-text("Like"), button:has-text("Liked")').first();
+      await likeButton.scrollIntoViewIfNeeded();
+      await likeButton.waitFor({ state: 'visible' });
+      await likeButton.click();
+      // Wait for any UI updates after clicking like
+      await this.page.waitForLoadState('networkidle');
+    } catch (error: any) {
+      throw new Error(`Failed to click like button for product at index ${index}: ${error.message}`);
+    }
   }
 
   async getLikeCount(index: number): Promise<number> {
@@ -165,18 +254,38 @@ export class ProductsPage extends BasePage {
     return await this.paginationButtons.count();
   }
 
+  /**
+   * Clicks the pagination button for the specified page number
+   * @param pageNumber - The page number to navigate to
+   */
   async clickPaginationButton(pageNumber: number): Promise<void> {
-    const paginationBtn = this.paginationButtons.filter({ hasText: new RegExp(`^${pageNumber}$`) }).first();
-    await paginationBtn.scrollIntoViewIfNeeded();
-    await paginationBtn.click();
-    await this.page.waitForTimeout(1000);
+    try {
+      const paginationBtn = this.paginationButtons.filter({ hasText: new RegExp(`^${pageNumber}$`) }).first();
+      await paginationBtn.scrollIntoViewIfNeeded();
+      await paginationBtn.waitFor({ state: 'visible' });
+      await paginationBtn.click();
+      // Wait for page to load after pagination click
+      await this.page.waitForLoadState('networkidle');
+    } catch (error: any) {
+      throw new Error(`Failed to click pagination button for page ${pageNumber}: ${error.message}`);
+    }
   }
 
+  /**
+   * Checks if a pagination button is active (selected)
+   * @param pageNumber - The page number to check for active state
+   */
   async isPaginationButtonActive(pageNumber: number): Promise<boolean> {
-    const button = this.paginationButtons.filter({ hasText: new RegExp(`^${pageNumber}$`) }).first();
-    await button.scrollIntoViewIfNeeded();
-    const className = await button.getAttribute('class');
-    return className !== null && className.includes('active');
+    try {
+      const button = this.paginationButtons.filter({ hasText: new RegExp(`^${pageNumber}$`) }).first();
+      await button.scrollIntoViewIfNeeded();
+      await button.waitFor({ state: 'visible' });
+      const className = await button.getAttribute('class');
+      return className !== null && className.includes('active');
+    } catch (error: any) {
+      // If the button doesn't exist or is not visible, return false
+      return false;
+    }
   }
 
   async getAllProductNames(): Promise<string[]> {

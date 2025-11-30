@@ -9,7 +9,7 @@ export default defineConfig({
   fullyParallel: false,  // Disable parallel for tests with shared state
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 1,
-  workers: 1,  // Sequential execution to avoid state conflicts
+  workers: 3,  // Sequential execution to avoid state conflicts
   reporter: [
     ['html', { outputFolder: 'playwright-report', open: 'never' }],
     ['monocart-reporter', {
@@ -34,13 +34,13 @@ export default defineConfig({
   ],
   use: {
     baseURL: 'http://127.0.0.1:5000',
-    headless: false,
+    headless: true,
     viewport: { width: 1280, height: 720 },
     actionTimeout: 15000,
     navigationTimeout: 30000,  // Increased for parallel/sequential execution
-    screenshot: 'only-on-failure',
-    video: 'retain-on-failure',
-    trace: 'retain-on-failure',
+    screenshot: 'only-on-failure', // only-on-failure or off or on
+    video: 'on', // retain-on-failure or on or off
+    trace: 'on', // retain-on-failure or on or off
   },
   projects: [
     {

@@ -1,5 +1,7 @@
 import { Page, Locator, expect } from '@playwright/test';
 import { BasePage } from './BasePage';
+import { ApiWaiting } from '../utils/ApiWaiting';
+import locatorsData from '../data/locators.json';
 
 /**
  * Represents an order with its details
@@ -69,10 +71,11 @@ export class OrderPage extends BasePage {
   /**
    * Clicks the Pending tab and waits for orders to load
    */
+
   async clickPendingTab(): Promise<void> {
     await this.pendingTab.waitFor({ state: 'visible' });
     await this.pendingTab.click();
-    await this.waitForOrdersToLoad();
+    await this.page.waitForLoadState('networkidle');
   }
 
   /**
@@ -109,11 +112,11 @@ export class OrderPage extends BasePage {
   private async waitForOrdersToLoad(): Promise<void> {
     // Wait for either orders to appear or "No orders found" message
     await Promise.race([
-      this.orderCards.first().waitFor({ state: 'visible', timeout: 5000 }).catch(() => {}),
-      this.noOrdersMessage.waitFor({ state: 'visible', timeout: 5000 }).catch(() => {})
+      this.orderCards.first().waitFor({ state: 'visible', timeout: 5000 }).catch(() => { }),
+      this.noOrdersMessage.waitFor({ state: 'visible', timeout: 5000 }).catch(() => { })
     ]);
     // Wait for network to be idle to ensure all data is loaded
-    await this.page.waitForLoadState('networkidle', { timeout: 10000 }).catch(() => {});
+    await this.page.waitForLoadState('networkidle', { timeout: 10000 }).catch(() => { });
   }
 
   /**
@@ -123,18 +126,18 @@ export class OrderPage extends BasePage {
   async getOrderCount(): Promise<number> {
     // Wait for orders container to be ready
     await this.page.waitForSelector('main > div > div:last-child', { state: 'attached' });
-    
+
     // Check if "No orders found" message is visible first
     const noOrdersVisible = await this.isNoOrdersMessageVisible();
     if (noOrdersVisible) {
       return 0;
     }
-    
+
     // Count only visible pending orders (those with "Cancel Order" button)
     // This is the correct way to count pending orders since cancelled orders don't have this button
     const pendingOrders = this.page.locator('main > div > div:last-child > div:has(button:has-text("Cancel Order"))');
     const count = await pendingOrders.count();
-    
+
     // Return the count of orders with cancel buttons
     // If 0, it means no pending orders (they might be cancelled or in other status)
     return count;
@@ -147,20 +150,20 @@ export class OrderPage extends BasePage {
    */
   async getOrderByIndex(index: number): Promise<OrderDetails> {
     const card = this.orderCards.nth(index);
-    
+
     // Wait for the card to be visible
     await card.waitFor({ state: 'visible', timeout: 10000 });
-    
+
     // Get order ID from h3 heading
     const orderHeading = card.locator('h3').first();
     const orderIdText = await orderHeading.textContent().catch(() => null);
     const orderId = orderIdText ? orderIdText.trim() : null;
-    
+
     // Get status - look for text that contains status keywords
     const statusElement = card.locator('div, span').filter({ hasText: /pending|processing|shipped|delivered|cancelled/i }).first();
     const statusText = await statusElement.textContent().catch(() => null);
     const status = statusText ? statusText.trim().toLowerCase() : null;
-    
+
     // Get total - look for paragraph with "Total:" and extract the amount
     let total: string | null = null;
     const totalParagraph = card.locator('p').filter({ hasText: /Total:/i }).first();
@@ -171,7 +174,7 @@ export class OrderPage extends BasePage {
         total = `$${totalMatch[1]}`;
       }
     }
-    
+
     // Get date - look for paragraph with "Date:"
     let date: string | null = null;
     const dateParagraph = card.locator('p').filter({ hasText: /Date:/i }).first();
@@ -179,7 +182,7 @@ export class OrderPage extends BasePage {
     if (dateText) {
       date = dateText.replace(/Date:\s*/i, '').trim();
     }
-    
+
     // Get items count - look for paragraph with "Items:"
     let itemsCount: string | null = null;
     const itemsParagraph = card.locator('p').filter({ hasText: /Items:/i }).first();
@@ -190,17 +193,17 @@ export class OrderPage extends BasePage {
         itemsCount = itemsMatch[1];
       }
     }
-    
+
     // Get product names - extract from card text
     const productNames: string[] = [];
     const cardText = await card.textContent().catch(() => '');
     if (cardText) {
       const lines = cardText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
       for (const line of lines) {
-        if (line.length > 2 && 
-            !line.match(/Order #|pending|processing|shipped|delivered|cancelled|Date:|Total:|Items:|Qty:|\$|Cancel Order/i) &&
-            !line.match(/^\d+$/) &&
-            !productNames.includes(line)) {
+        if (line.length > 2 &&
+          !line.match(/Order #|pending|processing|shipped|delivered|cancelled|Date:|Total:|Items:|Qty:|\$|Cancel Order/i) &&
+          !line.match(/^\d+$/) &&
+          !productNames.includes(line)) {
           productNames.push(line);
         }
       }
@@ -240,9 +243,10 @@ export class OrderPage extends BasePage {
   async clickCancelOrder(index: number = 0): Promise<void> {
     const cancelButtons = this.cancelOrderButton;
     await cancelButtons.first().waitFor({ state: 'visible', timeout: 10000 });
-    
+
     const count = await cancelButtons.count();
     if (count > index) {
+      await this.page.waitForLoadState('networkidle', { timeout: 4000 });
       const button = cancelButtons.nth(index);
       await button.scrollIntoViewIfNeeded();
       await button.waitFor({ state: 'visible' });
@@ -278,7 +282,7 @@ export class OrderPage extends BasePage {
     acceptDialog: boolean = false
   ): Promise<boolean> {
     let dialogHandled = false;
-    
+
     // Setup dialog handler BEFORE clicking
     const dialogPromise = new Promise<void>((resolve) => {
       this.page.once('dialog', async dialog => {
@@ -291,13 +295,13 @@ export class OrderPage extends BasePage {
         resolve();
       });
     });
-    
+
     // Click Cancel Order
     await this.clickCancelOrder(orderIndex);
-    
+
     // Wait for dialog to be handled
     await dialogPromise;
-    
+
     return dialogHandled;
   }
 
@@ -325,17 +329,17 @@ export class OrderPage extends BasePage {
   ): Promise<void> {
     // Get initial order count
     const initialOrderCount = await this.getOrderCount();
-    
+
     // Click cancel order and dismiss dialog
     await this.clickCancelOrderWithDialog(orderIndex, false);
-    
+
     // Wait for UI to update
     await this.page.waitForLoadState('networkidle');
-    
+
     // Validate order count remains the same
     const finalOrderCount = await this.getOrderCount();
     expect(finalOrderCount).toBe(initialOrderCount);
-    
+
     // Validate order status is still pending
     if (finalOrderCount > 0) {
       const order = await this.getOrderByIndex(0);
@@ -389,6 +393,74 @@ export class OrderPage extends BasePage {
     await this.page.waitForLoadState('networkidle');
   }
 
+
+  async cancelMultipleOrders(count: number) {
+    for (let i = 0; i < count; i++) {
+      try {
+        await this.page.getByRole('button', { name: 'Cancel Order' }).first().click();
+        await this.page.getByRole('button', { name: '×' }).click();
+
+
+        // Optional: wait for page to update only if needed
+        await this.page.waitForLoadState('networkidle');
+        await this.page.locator('.alert.alert-success').waitFor({ state: 'visible', timeout: 500 }).catch(() => { });
+
+      } catch (error) {
+        console.error(`Failed to cancel order ${i + 1}:`, error);
+        break;
+      }
+    }
+  }
+  async cancelMultipleOrdersNoCount() {
+    while (this.page.getByRole('button', { name: '×' }).isHidden()) {
+      try {
+        await this.page.getByRole('button', { name: 'Cancel Order' }).waitFor({ state: 'visible', timeout: 500 }).catch(() => { });
+        //  await this.page.getByRole('button', { name: 'Cancel Order' }).first().click();
+
+        // Set up dialog handler to accept (click OK)
+        this.page.once('dialog', dialog => {
+          console.log(`Dialog message: ${dialog.message()}`);
+          dialog.accept().catch(() => { });
+        });
+
+
+        const cancelButtons = await this.page.getByRole('button', { name: 'Cancel Order' }).all();
+        await cancelButtons[0].click(); // first button
+
+
+
+
+        await this.page.waitForLoadState('networkidle');
+        await this.page.locator('.alert.alert-success').waitFor({ state: 'visible', timeout: 500 }).catch(() => { });
+        await this.page.getByRole('button', { name: '×' }).click();
+
+
+
+
+      } catch (error) {
+        console.error(`Failed to cancel AN order`, error);
+        break;
+      }
+    }
+  }
+
+
+  async cancelAllPendingOrdersApi(maxIterations: number = 20): Promise<void> {
+    let orderCount = await this.getOrderCount();
+    let iterations = 0;
+
+    while (orderCount > 0 && iterations < maxIterations) {
+      iterations++;
+
+      await this.clickCancelOrderWithDialog(0, true);
+      await this.waitForOrderCancelledAlert(5000);
+      await this.waitForPageLoad(); // Let page settle
+
+      // The DOM is likely changing, so getting a fresh count is important.
+      orderCount = await this.getOrderCount();
+    }
+  }
+
   /**
    * Cancels all pending orders until none remain
    * This method handles the entire cancellation loop
@@ -397,28 +469,23 @@ export class OrderPage extends BasePage {
   async cancelAllPendingOrders(maxIterations: number = 20): Promise<void> {
     let orderCount = await this.getOrderCount();
     let iterations = 0;
-    
+
     while (orderCount > 0 && iterations < maxIterations) {
       iterations++;
-      
+
       // Click cancel order and accept dialog
       await this.clickCancelOrderWithDialog(0, true);
-      
+
       // Wait for cancellation alert
       await this.waitForOrderCancelledAlert(5000);
-      
-      // Wait for the cancel button to disappear (order removed from pending)
-      await this.waitForCancelButtonToDisappear(5000);
-      
+
+
       // Wait for page to update after cancellation
       await this.waitForPageLoad();
-      
-      // Refresh pending tab to get updated order list
-      await this.clickPendingTab();
-      
+
       // Wait for orders to load after tab click
       await this.waitForPageLoad();
-      
+
       // Get updated order count
       orderCount = await this.getOrderCount();
     }
@@ -430,16 +497,16 @@ export class OrderPage extends BasePage {
    */
   async getAllTabs(): Promise<string[]> {
     const tabs: string[] = [];
-    
+
     // Wait for tabs to be visible
-    await this.allTab.waitFor({ state: 'visible', timeout: 5000 }).catch(() => {});
-    
+    await this.allTab.waitFor({ state: 'visible', timeout: 5000 }).catch(() => { });
+
     if (await this.allTab.isVisible()) tabs.push('All');
     if (await this.pendingTab.isVisible()) tabs.push('Pending');
     if (await this.processingTab.isVisible()) tabs.push('Processing');
     if (await this.shippedTab.isVisible()) tabs.push('Shipped');
     if (await this.deliveredTab.isVisible()) tabs.push('Delivered');
-    
+
     return tabs;
   }
 
@@ -465,7 +532,7 @@ export class OrderPage extends BasePage {
   async waitForOrderWithTotal(expectedTotal: string, timeout: number = 10000): Promise<OrderDetails | null> {
     const startTime = Date.now();
     const expectedTotalNum = parseFloat(expectedTotal.replace('$', '').trim());
-    
+
     while (Date.now() - startTime < timeout) {
       const count = await this.getOrderCount();
       for (let i = 0; i < count; i++) {
@@ -482,9 +549,9 @@ export class OrderPage extends BasePage {
         }
       }
       // Wait a bit before checking again using proper wait mechanism
-      await this.page.waitForLoadState('domcontentloaded', { timeout: 500 }).catch(() => {});
+      await this.page.waitForLoadState('domcontentloaded', { timeout: 500 }).catch(() => { });
     }
-    
+
     return null;
   }
 
@@ -500,35 +567,35 @@ export class OrderPage extends BasePage {
     timeout: number = 10000
   ): Promise<OrderDetails> {
     const cartPriceNum = parseFloat(expectedCartPrice.replace('$', '').trim());
-    
+
     // Wait for orders to load
-    await this.page.waitForSelector('h3:has-text("Order #")', { timeout: 10000 }).catch(() => {});
-    
+    await this.page.waitForSelector('h3:has-text("Order #")', { timeout: 10000 }).catch(() => { });
+
     // Get order count and validate
     const orderCount = await this.getOrderCount();
     expect(orderCount).toBeGreaterThan(0);
-    
+
     // Find order with matching total
     const order = await this.waitForOrderWithTotal(expectedCartPrice, timeout);
-    
+
     // Validate order exists
     expect(order).not.toBeNull();
-    
+
     if (!order) {
       throw new Error('Order validation failed: order is null');
     }
-    
+
     // Validate order has total
     expect(order.total).not.toBeNull();
-    
+
     if (!order.total) {
       throw new Error('Order validation failed: order total is null');
     }
-    
+
     // Validate price matches
     const orderPriceNum = parseFloat(order.total.replace('$', '').trim());
     expect(orderPriceNum).toBeCloseTo(cartPriceNum, 2);
-    
+
     return order;
   }
 
@@ -549,34 +616,34 @@ export class OrderPage extends BasePage {
   ): Promise<OrderDetails> {
     // Wait for orders to appear
     await this.page.waitForSelector('h3:has-text("Order #")', { timeout: 10000 });
-    
+
     // Get order count and validate
     const orderCount = await this.getOrderCount();
     expect(orderCount).toBeGreaterThan(0);
-    
+
     // Find order with matching total
     let order = await this.waitForOrderWithTotal(expectedCartPrice, timeout);
-    
+
     // Fallback: get first order if no match found
     if (!order && orderCount > 0) {
       order = await this.getOrderByIndex(0);
     }
-    
+
     // Validate order exists
     expect(order).not.toBeNull();
-    
+
     if (!order) {
       throw new Error('Order validation failed: order is null');
     }
-    
+
     // Validate status is pending
     expect(order.status).not.toBeNull();
     expect(order.status?.toLowerCase()).toContain('pending');
-    
+
     // Validate date exists
     expect(order.date).not.toBeNull();
     expect(order.date?.length).toBeGreaterThan(0);
-    
+
     // Validate total matches
     expect(order.total).not.toBeNull();
     if (order.total) {
@@ -584,23 +651,23 @@ export class OrderPage extends BasePage {
       const orderPriceNum = parseFloat(order.total.replace('$', '').trim());
       expect(orderPriceNum).toBeCloseTo(cartPriceNum, 2);
     }
-    
+
     // Validate items count matches
     expect(order.itemsCount).not.toBeNull();
     if (order.itemsCount) {
       const itemsCountNum = parseInt(order.itemsCount);
       expect(itemsCountNum).toBe(expectedItemsCount);
     }
-    
+
     // Validate product name if provided
     if (expectedProductName) {
       expect(order.productNames.length).toBeGreaterThan(0);
-      const hasProductName = order.productNames.some(name => 
+      const hasProductName = order.productNames.some(name =>
         name.toLowerCase().includes(expectedProductName.toLowerCase())
       );
       expect(hasProductName).toBeTruthy();
     }
-    
+
     return order;
   }
 
@@ -614,21 +681,21 @@ export class OrderPage extends BasePage {
     // Get order count and validate
     const orderCount = await this.getOrderCount();
     expect(orderCount).toBeGreaterThan(0);
-    
+
     // Get the order at specified index
     const order = await this.getOrderByIndex(orderIndex);
-    
+
     // Validate order exists
     expect(order).not.toBeNull();
-    
+
     if (!order) {
       throw new Error(`Order validation failed: order at index ${orderIndex} is null`);
     }
-    
+
     // Validate order status is pending
     expect(order.status).not.toBeNull();
     expect(order.status?.toLowerCase()).toContain('pending');
-    
+
     return order;
   }
 }

@@ -1,0 +1,16 @@
+{
+  "status": "init",
+  "executionArgs": {
+    "projectName": "playwright-tests3",
+    "projectPath": "d:\\ai\\playwright-exec\\playwright-tests3",
+    "testIds": [],
+    "additionalInstruction": "Generate test cases for adding a product to the cart without requiring login. Focus on scenarios where a user can browse products and add them to the cart directly.",
+    "envs": {
+      "API_KEY": "sk-user-WiU7cSsivQeTK5ssjkqBJ_m6dvgG_C2K81nkOPPL1VKe-jZCIZPAlaP37GTastpcJnzl9nY4VDw2wMpN6oqdfXnLbM3bq7DY6EgmUDPRla0i2z3T2_0IbMnA1Csmog7__zs"
+    }
+  },
+  "scope": "codebase",
+  "type": "frontend",
+  "localEndpoint": "http://localhost:5173/",
+  "serverPort": 2820
+}

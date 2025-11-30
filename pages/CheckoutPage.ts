@@ -88,7 +88,7 @@ export class CheckoutPage extends BasePage {
     if (await this.shippingAddressInput.isVisible()) {
       await this.shippingAddressInput.scrollIntoViewIfNeeded();
       await this.shippingAddressInput.fill(address);
-      await this.page.waitForTimeout(500);
+      await this.page.waitForLoadState('networkidle');
     }
   }
 

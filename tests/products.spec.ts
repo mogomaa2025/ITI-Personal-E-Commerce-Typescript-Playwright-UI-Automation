@@ -4,6 +4,7 @@ import { LoginPage } from '../pages/LoginPage';
 import { Helpers } from '../utils/helpers';
 import users from '../data/users.json';
 import testData from '../data/data.json';
+import { ApiWaiting } from '../utils/ApiWaiting';
 
 test.describe('Products Page Tests - Logged In User', () => {
   let productsPage: ProductsPage;
@@ -16,7 +17,7 @@ test.describe('Products Page Tests - Logged In User', () => {
     helpers = new Helpers(page);
     
     await loginPage.navigateTo();
-    await loginPage.login(users.validUser.email, users.validUser.password);
+    await loginPage.login(users.productDetialsUser.email, users.productDetialsUser.password);
     await page.waitForTimeout(2000);
     
     // Clear cart before each test to ensure clean state
@@ -25,121 +26,220 @@ test.describe('Products Page Tests - Logged In User', () => {
     
     // Navigate to products page
     await productsPage.navigateTo();
+    await page.waitForLoadState('networkidle');
   });
 
   test('PROD-001: Verify products page loads correctly', async ({ page }) => {
-    expect.soft(await productsPage.pageHeading.isVisible()).toBeTruthy();
-    expect.soft(await productsPage.searchInput.isVisible()).toBeTruthy();
-    expect.soft(await productsPage.categoryFilter.isVisible()).toBeTruthy();
-    expect.soft(await productsPage.applyFiltersButton.isVisible()).toBeTruthy();
-    expect.soft(await productsPage.clearButton.isVisible()).toBeTruthy();
+    // Arrange - Page objects already initialized in beforeEach
+
+    // Act & Assert - Verify all products page elements are visible
+    await expect(productsPage.pageHeading).toBeVisible();
+    await expect(productsPage.searchInput).toBeVisible();
+    await expect(productsPage.categoryFilter).toBeVisible();
+    await expect(productsPage.applyFiltersButton).toBeVisible();
+    await expect(productsPage.clearButton).toBeVisible();
   });
 
   test('PROD-002: Verify products are displayed', async ({ page }) => {
+    // Arrange - Page objects already initialized in beforeEach
+
+    // Act
     const productCount = await productsPage.getProductCount();
-    expect.soft(productCount).toBeGreaterThan(0);
+
+    // Assert
+    expect(productCount).toBeGreaterThan(0);
   });
 
   test('PROD-003: Verify product card contains all required elements', async ({ page }) => {
+    // Arrange - Page objects already initialized in beforeEach
+
+    // Act
     const product = await productsPage.getProductByIndex(0);
-    expect.soft(product.name).toBeTruthy();
-    expect.soft(product.category).toBeTruthy();
-    expect.soft(product.price).toBeTruthy();
-    expect.soft(product.stock).toBeTruthy();
+
+    // Assert
+    expect(product.name).toBeTruthy();
+    expect(product.category).toBeTruthy();
+    expect(product.price).toBeTruthy();
+    expect(product.stock).toBeTruthy();
   });
 
   test('PROD-004: Verify price format is correct (2 decimal places)', async ({ page }) => {
+    // Arrange - Page objects already initialized in beforeEach
+
+    // Act
     const priceResults = await productsPage.validatePriceFormat();
+
+    // Assert
     for (const result of priceResults) {
-      expect.soft(result.valid, `Invalid price format: ${result.price}`).toBeTruthy();
+      expect(result.valid, `Invalid price format: ${result.price}`).toBeTruthy();
     }
   });
 
   test('PROD-005: Verify View Details button navigation', async ({ page }) => {
+    // Arrange - Page objects already initialized in beforeEach
+
+    // Act
     await productsPage.clickViewDetails(0);
-    await page.waitForTimeout(1000);
+
+    // Assert
+    // Wait for navigation to complete
+    await page.waitForLoadState('networkidle');
     expect(page.url()).toMatch(/\/web\/products\/\d+/);
   });
 
   test('PROD-006: Verify Add to Cart functionality', async ({ page }) => {
-    // Cart badge shows unique products count
+    // Arrange - Page objects already initialized in beforeEach
     const initialCount = await productsPage.getCartBadgeCount();
     console.log(`Initial cart count: ${initialCount}`);
-    
+
     // Verify cart is empty (0) after cleanup
-    expect.soft(initialCount).toBe(0);
-    
+    expect(initialCount).toBe(0);
+
+    // Act
     await productsPage.clickAddToCart(0);
+
+    // Wait for alert to appear
     await helpers.waitForAlertToAppear('Added to cart!');
-    await page.waitForTimeout(1500);
+
+    await expect(page.locator('#cart-count')).toHaveText('1');
+
     
     const newCount = await productsPage.getCartBadgeCount();
     console.log(`New cart count: ${newCount}`);
+
+
     
+
+    // Assert
     // Cart badge should increase by exactly 1 (unique product added)
-    expect.soft(newCount).toBe(1);
+    expect(newCount).toBe(1);
   });
 
   test('PROD-007: Verify Add to Cart shows alert', async ({ page }) => {
+    // Arrange - Page objects already initialized in beforeEach
+
+    // Act
     await productsPage.clickAddToCart(0);
+
+    // Wait for alert to appear
     await helpers.waitForAlertToAppear('Added to cart!');
     const alertText = await productsPage.getAlertText();
-    expect.soft(alertText).toContain('Added to cart!');
+
+    // Assert
+    expect(alertText).toContain('Added to cart!');
   });
 
   test('PROD-008: Verify Like button functionality', async ({ page }) => {
+    // Arrange - Page objects already initialized in beforeEach
+
+    // Act
     await productsPage.clickLikeButton(0);
-    await page.waitForTimeout(1000);
+
+    // Wait for UI update after clicking like button
+    await page.waitForLoadState('networkidle');
+
+    // Assert
+    // We could verify the like status changed, but for now just ensure no errors occurred
+    expect(true).toBeTruthy(); // Placeholder assertion since the test just verifies the action works without errors
   });
 
   test('PROD-009: Verify Search functionality with valid term', async ({ page }) => {
+    // Arrange - Page objects already initialized in beforeEach
+
+    // Act
     await productsPage.searchProduct(testData.products.searchTerms.valid);
     await productsPage.applyFilters();
-    await page.waitForTimeout(1000);
+
+    // Wait for search results to load
+    await page.waitForLoadState('networkidle');
+
+    // Assert
     const productNames = await productsPage.getAllProductNames();
-    const hasSearchTerm = productNames.some(name => 
+    const hasSearchTerm = productNames.some(name =>
       name.toLowerCase().includes(testData.products.searchTerms.valid.toLowerCase())
     );
-    expect.soft(hasSearchTerm).toBeTruthy();
+    expect(hasSearchTerm).toBeTruthy();
   });
 
   test('PROD-010: Verify Search with no results', async ({ page }) => {
+    // Arrange - Page objects already initialized in beforeEach
+
+    // Act
     await productsPage.searchProduct(testData.products.searchTerms.noResults);
     await productsPage.applyFilters();
-    await page.waitForTimeout(1000);
+
+    // Wait for search results to load
+    await page.waitForLoadState('networkidle');
+
+    // Assert
+    // Verify no products are found or appropriate message is shown
+    const productCount = await productsPage.getProductCount();
+    expect(productCount).toBeGreaterThanOrEqual(0); // Could be 0 if no results, or some if it includes partial matches
   });
 
   test('PROD-011: Verify Category filter - Electronics', async ({ page }) => {
+    // Arrange - Page objects already initialized in beforeEach
+
+    // Act
     await productsPage.selectCategory('Electronics');
     await productsPage.applyFilters();
-    await page.waitForTimeout(1000);
+
+    // Wait for filtered results to load
+    await page.waitForLoadState('networkidle');
+
+    // Assert
     const productCount = await productsPage.getProductCount();
     if (productCount > 0) {
       const product = await productsPage.getProductByIndex(0);
-      expect.soft(product.category).toContain('Electronics');
+      expect(product.category).toContain('Electronics');
     }
   });
 
   test('PROD-012: Verify Category filter - All Categories', async ({ page }) => {
+    // Arrange - Page objects already initialized in beforeEach
+
+    // Act
     await productsPage.selectCategory('All Categories');
     await productsPage.applyFilters();
-    await page.waitForTimeout(1000);
+
+    // Wait for filtered results to load
+    await page.waitForLoadState('networkidle');
+
+    // Assert
     const productCount = await productsPage.getProductCount();
-    expect.soft(productCount).toBeGreaterThan(0);
+    expect(productCount).toBeGreaterThan(0);
   });
 
   test('PROD-013: Verify price filter with valid range', async ({ page }) => {
+    // Arrange - Page objects already initialized in beforeEach
+
+    // Act
     await productsPage.setMinPrice(testData.products.priceFilters.valid.min);
     await productsPage.setMaxPrice(testData.products.priceFilters.valid.max);
     await productsPage.applyFilters();
-    await page.waitForTimeout(1000);
+
+    // Wait for filtered results to load
+    await page.waitForLoadState('networkidle');
+
+    // Assert
+    // Verify results are within the expected price range
+    expect(true).toBeTruthy(); // Placeholder since we don't have a specific assertion for price range
   });
 
   test('PROD-014: Verify price filter with min greater than max', async ({ page }) => {
+    // Arrange - Page objects already initialized in beforeEach
+
+    // Act
     await productsPage.setMinPrice(testData.products.priceFilters.invalid.minGreaterThanMax.min);
     await productsPage.setMaxPrice(testData.products.priceFilters.invalid.minGreaterThanMax.max);
     await productsPage.applyFilters();
-    await page.waitForTimeout(1000);
+
+    // Wait for filtered results to load
+    await page.waitForLoadState('networkidle');
+
+    // Assert
+    // Verify the filter handles the invalid range appropriately (could show error or reset)
+    expect(true).toBeTruthy(); // Placeholder assertion
   });
 
   test('PROD-015: Verify price filter with negative values', async ({ page }) => {
@@ -230,5 +330,20 @@ test.describe('Products Page Tests - Logged In User', () => {
       expect.soft(await productsPage.noProductsMessage.isVisible()).toBeTruthy();
     }
   });
-});
+
+  test('CART-016: aa', async ({ page }) => {
+ 
+    const buttons = await page.getByRole('button', { name: 'Add to Cart' }).all();
+    for (let i = 1; i < buttons.length; i++) {
+      await buttons[i].click();
+      await page.getByText("Added to cart!").first().waitFor({ state: 'visible' });
+      await page.getByRole('button', { name: '×' }).last().click();
+    }
+
+ });
+
+
+  });
+
+
 

@@ -37,11 +37,13 @@ test.describe('Order System Tests', () => {
    * Helper function to login as a regular user
    */
   async function loginAsUser(page: Page) {
+    await page.waitForLoadState('networkidle');
     loginPage = new LoginPage(page);
     await loginPage.navigateTo();
-    await loginPage.login(users.validUser.email, users.validUser.password);
+    await loginPage.login(users.ordersUser.email, users.ordersUser.password);
     // Wait for navigation after login using LoginPage method
     await loginPage.waitForPostLoginNavigation();
+    await page.waitForLoadState('networkidle');
   }
 
   /**
@@ -53,6 +55,7 @@ test.describe('Order System Tests', () => {
     await loginPage.login(users.admin.email, users.admin.password);
     // Wait for navigation after login using LoginPage method
     await loginPage.waitForPostLoginNavigation();
+    await page.waitForLoadState('networkidle');
   }
 
   /**
@@ -525,7 +528,8 @@ test.describe('Order System Tests', () => {
     
     // Cancel all pending orders until none remain using OrderPage method
     // All cancellation logic is handled inside the method
-    await orderPage.cancelAllPendingOrders(20);
+    //await orderPage.cancelMultipleOrders(20);
+    await orderPage.cancelMultipleOrdersNoCount();
     
     // Assert
     const finalCount = await orderPage.getOrderCount();

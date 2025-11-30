@@ -140,19 +140,43 @@ export class ProductDetailsPage extends BasePage {
     await this.quantityInput.fill(value.toString());
   }
 
+  /**
+   * Clicks the increase quantity button and waits for update
+   */
   async clickIncreaseQty(): Promise<void> {
-    await this.btnIncreaseQty.click();
-    await this.page.waitForTimeout(500);
+    try {
+      await this.btnIncreaseQty.waitFor({ state: 'visible' });
+      await this.btnIncreaseQty.click();
+      await this.page.waitForLoadState('networkidle');
+    } catch (error: any) {
+      throw new Error(`Failed to click increase quantity button: ${error.message}`);
+    }
   }
 
+  /**
+   * Clicks the decrease quantity button and waits for update
+   */
   async clickDecreaseQty(): Promise<void> {
-    await this.btnDecreaseQty.click();
-    await this.page.waitForTimeout(500);
+    try {
+      await this.btnDecreaseQty.waitFor({ state: 'visible' });
+      await this.btnDecreaseQty.click();
+      await this.page.waitForLoadState('networkidle');
+    } catch (error: any) {
+      throw new Error(`Failed to click decrease quantity button: ${error.message}`);
+    }
   }
 
+  /**
+   * Clicks the like product button and waits for response
+   */
   async clickLikeProduct(): Promise<void> {
-    await this.btnLikeProduct.click();
-    await this.page.waitForTimeout(500);
+    try {
+      await this.btnLikeProduct.waitFor({ state: 'visible' });
+      await this.btnLikeProduct.click();
+      await this.page.waitForLoadState('networkidle');
+    } catch (error: any) {
+      throw new Error(`Failed to click like product button: ${error.message}`);
+    }
   }
 
   async isProductLiked(): Promise<boolean> {
@@ -160,15 +184,31 @@ export class ProductDetailsPage extends BasePage {
     return text?.includes('Liked') || text?.includes('❤️') || false;
   }
 
+  /**
+   * Adds the product to wishlist and waits for response
+   */
   async clickAddToWishlist(): Promise<void> {
-    await this.btnAddToWishlist.click();
-    await this.page.waitForTimeout(500);
+    try {
+      await this.btnAddToWishlist.waitFor({ state: 'visible' });
+      await this.btnAddToWishlist.click();
+      await this.page.waitForLoadState('networkidle');
+    } catch (error: any) {
+      throw new Error(`Failed to add product to wishlist: ${error.message}`);
+    }
   }
 
+  /**
+   * Clicks the Add to Cart button and waits for response
+   */
   async clickAddToCart(): Promise<void> {
-    const addToCartBtn = this.page.locator('#btn-add-to-cart-detail');
-    await addToCartBtn.click();
-    await this.page.waitForTimeout(1000);
+    try {
+      const addToCartBtn = this.page.locator('#btn-add-to-cart-detail');
+      await addToCartBtn.waitFor({ state: 'visible' });
+      await addToCartBtn.click();
+      await this.page.waitForLoadState('networkidle');
+    } catch (error: any) {
+      throw new Error(`Failed to click add to cart button: ${error.message}`);
+    }
   }
 
   async clickBackToProducts(): Promise<void> {
@@ -180,9 +220,17 @@ export class ProductDetailsPage extends BasePage {
     return this.page.url().includes('/web/products') && !this.page.url().match(/\/web\/products\/\d+/);
   }
 
+  /**
+   * Clicks the write review button and waits for form to appear
+   */
   async clickWriteReview(): Promise<void> {
-    await this.btnWriteReview.click();
-    await this.page.waitForTimeout(500);
+    try {
+      await this.btnWriteReview.waitFor({ state: 'visible' });
+      await this.btnWriteReview.click();
+      await this.reviewForm.waitFor({ state: 'visible', timeout: 5000 });
+    } catch (error: any) {
+      throw new Error(`Failed to click write review button: ${error.message}`);
+    }
   }
 
   async isReviewFormVisible(): Promise<boolean> {
@@ -193,9 +241,17 @@ export class ProductDetailsPage extends BasePage {
     await this.reviewTextarea.fill(reviewText);
   }
 
+  /**
+   * Submits the review form and waits for response
+   */
   async submitReview(): Promise<void> {
-    await this.reviewSubmitButton.click();
-    await this.page.waitForTimeout(1000);
+    try {
+      await this.reviewSubmitButton.waitFor({ state: 'visible' });
+      await this.reviewSubmitButton.click();
+      await this.page.waitForLoadState('networkidle');
+    } catch (error: any) {
+      throw new Error(`Failed to submit review: ${error.message}`);
+    }
   }
 
   async getAvgRatingValue(): Promise<string | null> {
@@ -242,9 +298,17 @@ export class ProductDetailsPage extends BasePage {
     return { author, rating, text };
   }
 
+  /**
+   * Clicks the specifications tab and waits for content to load
+   */
   async clickTabSpecifications(): Promise<void> {
-    await this.tabSpecifications.click();
-    await this.page.waitForTimeout(500);
+    try {
+      await this.tabSpecifications.waitFor({ state: 'visible' });
+      await this.tabSpecifications.click();
+      await this.specProductId.waitFor({ state: 'visible', timeout: 5000 });
+    } catch (error: any) {
+      throw new Error(`Failed to click specifications tab: ${error.message}`);
+    }
   }
 
   async getSpecProductId(): Promise<string | null> {
@@ -287,35 +351,51 @@ export class ProductDetailsPage extends BasePage {
     };
   }
 
+  /**
+   * Checks if expected quantity of items is reflected in the cart
+   * @param expectedQuantity - The expected number of unique products in the cart
+   */
   async checkQuantityInCart(expectedQuantity: number): Promise<boolean> {
-    // Wait for cart badge to update
-    await this.page.waitForTimeout(1500);
-    const cartCount = await this.getCartBadgeCount();
-    // Cart badge shows unique products, not total quantity
-    // So if we add 3 of the same product, it still shows 1
-    // We need to check the actual cart page for quantity
-    return cartCount >= 1; // At least one product should be in cart
+    try {
+      // Wait for cart badge to update
+      await this.page.waitForLoadState('networkidle');
+      const cartCount = await this.getCartBadgeCount();
+      // Cart badge shows unique products, not total quantity
+      // So if we add 3 of the same product, it still shows 1
+      // We need to check the actual cart page for quantity
+      return cartCount >= 1; // At least one product should be in cart
+    } catch (error: any) {
+      throw new Error(`Failed to check quantity in cart: ${error.message}`);
+    }
   }
   
+  /**
+   * Gets the quantity of a specific product in the cart
+   * @param productId - The ID of the product to check quantity for
+   */
   async getCartItemQuantity(productId: string): Promise<number> {
-    // Navigate to cart and check quantity for specific product
-    await this.page.goto('http://127.0.0.1:5000/web/cart');
-    await this.page.waitForLoadState('networkidle');
-    await this.page.waitForTimeout(1000);
-    
-    // Try to find quantity input for this product
-    // The quantity input might be in a table row or card for the product
-    const quantityInputs = this.page.locator('input[type="number"]');
-    const count = await quantityInputs.count();
-    
-    // If there's only one item in cart, it should be our product
-    if (count > 0) {
-      const firstInput = quantityInputs.first();
-      if (await firstInput.isVisible()) {
-        const value = await firstInput.inputValue();
-        return parseInt(value) || 0;
+    try {
+      // Navigate to cart and check quantity for specific product
+      await this.page.goto('http://127.0.0.1:5000/web/cart');
+      await this.page.waitForLoadState('networkidle');
+      await this.page.waitForLoadState('domcontentloaded');
+
+      // Try to find quantity input for this product
+      // The quantity input might be in a table row or card for the product
+      const quantityInputs = this.page.locator('input[type="number"]');
+      const count = await quantityInputs.count();
+
+      // If there's only one item in cart, it should be our product
+      if (count > 0) {
+        const firstInput = quantityInputs.first();
+        if (await firstInput.isVisible()) {
+          const value = await firstInput.inputValue();
+          return parseInt(value) || 0;
+        }
       }
+      return 0;
+    } catch (error: any) {
+      throw new Error(`Failed to get cart item quantity for product ${productId}: ${error.message}`);
     }
-    return 0;
   }
 }
