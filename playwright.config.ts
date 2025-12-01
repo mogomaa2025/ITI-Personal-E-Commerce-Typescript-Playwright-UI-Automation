@@ -39,7 +39,7 @@ export default defineConfig({
     actionTimeout: 15000,
     navigationTimeout: 30000,  // Increased for parallel/sequential execution
     screenshot: 'only-on-failure', // only-on-failure or off or on
-    video: 'on', // retain-on-failure or on or off
+    video: 'retain-on-failure', // retain-on-failure or on or off
     trace: 'on', // retain-on-failure or on or off
   },
   projects: [

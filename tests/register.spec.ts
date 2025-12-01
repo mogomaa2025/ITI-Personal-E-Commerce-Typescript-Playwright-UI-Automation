@@ -4,10 +4,7 @@ import { Helpers } from '../utils/helpers';
 import users from '../data/users.json';
 import testData from '../data/data.json';
 
-/**
- * Register page tests following the Page Object Model pattern
- * Tests are organized using Arrange-Act-Assert pattern
- */
+
 test.describe('Register Page Tests', () => {
   let registerPage: RegisterPage;
   let helpers: Helpers;
@@ -16,7 +13,6 @@ test.describe('Register Page Tests', () => {
     registerPage = new RegisterPage(page);
     helpers = new Helpers(page);
     await registerPage.navigateTo();
-    await page.waitForLoadState('networkidle');
   });
 
   test('REG-001: Verify Register page loads correctly', async ({ page }) => {
