@@ -432,8 +432,8 @@ export class OrderPage extends BasePage {
 
         await this.page.waitForLoadState('networkidle');
         await this.page.locator('.alert.alert-success').waitFor({ state: 'visible', timeout: 500 }).catch(() => { });
-        await this.page.getByRole('button', { name: '×' }).click();
-
+        //  await this.page.getByRole('button', { name: '×' }).click();
+        await this.page.getByRole('button', { name: '×' }).first().click();
 
 
 

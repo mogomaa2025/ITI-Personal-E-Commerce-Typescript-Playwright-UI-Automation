@@ -8,6 +8,7 @@ import users from '../data/users.json';
 import locatorData from '../data/locators.json';
 import { BasePage } from '@pages/BasePage';
 import { ApiWaiting } from '../utils/ApiWaiting';
+import { cartUrl } from '../data/urls.json';
 
 
 test.describe('Cart Page Tests - Guest User', () => {
@@ -22,7 +23,7 @@ test.describe('Cart Page Tests - Guest User', () => {
   // Guest User Tests - no afterEach to clear cart since user is not logged in
   test('CART-001: Navigate to cart as guest user', async ({ page }) => {
     // Navigate directly to cart as guest
-    await page.goto('http://127.0.0.1:5000/web/cart');
+    await page.goto(cartUrl);
 
     // Wait for the page to load and the "Please login to continue" message to appear
     await page.waitForSelector('text=Please login to continue', { state: 'visible', timeout: 10000 });
@@ -307,13 +308,13 @@ test.describe('Cart Page Tests - Logged In User', () => {
     // await responsePromise;
 
     // [way3] waiting api method
-   await productsPage.clickAddToCart(0);
-   //await ApiWaiting.waitForAndAssertResponse(page, '**/api/cart/**', 201,'message', 'Item added to cart successfully');
- 
-   
+    await productsPage.clickAddToCart(0);
+    //await ApiWaiting.waitForAndAssertResponse(page, '**/api/cart/**', 201,'message', 'Item added to cart successfully');
+
+
 
     // [way2] wait for cart be 1
-  await expect(page.locator('#cart-count')).toHaveText('1');
+    await expect(page.locator('#cart-count')).toHaveText('1');
 
 
     // Navigate to cart
@@ -332,11 +333,11 @@ test.describe('Cart Page Tests - Logged In User', () => {
     // Note: The checkout functionality appears to be incomplete in this application
     // The button is clickable but doesn't trigger any visible action (no navigation, no form, no modal)
     // For now, we'll just verify the button was clickable and the page remains stable
-    
+
     // Verify we're still on the cart page and no errors occurred
     const currentUrl = page.url();
     expect(currentUrl).toBe('http://127.0.0.1:5000/web/cart');
-    
+
     // Verify the cart summary is still visible (indicating page is stable)
     const cartSummaryVisible = await cartPage.cartSummary.isVisible();
     expect(cartSummaryVisible).toBeTruthy();
@@ -383,7 +384,7 @@ test.describe('Cart Page Tests - Logged In User', () => {
 
     // Navigate to products
     await productsPage.navigateTo();
-    
+
     // Add the same product multiple times to test unique product count vs total items
     await productsPage.clickAddToCart(0); // Add first product
     await expect(basePage.cartBadge).toContainText('1');// Cart badge should increase by 1 for first product, stay same for same product
@@ -399,7 +400,7 @@ test.describe('Cart Page Tests - Logged In User', () => {
   test('CART-014: Handle invalid quantity values gracefully', async ({ page }) => {
     // Navigate to products and add a product
     await productsPage.navigateTo();
-    
+
     await productsPage.clickAddToCart(0);
 
     // Navigate to cart
@@ -445,4 +446,4 @@ test.describe('Cart Page Tests - Logged In User', () => {
 
 
 
-  });
+});

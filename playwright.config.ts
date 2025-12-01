@@ -9,7 +9,7 @@ export default defineConfig({
   fullyParallel: false,  // Disable parallel for tests with shared state
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 1,
-  workers: 3,  // Sequential execution to avoid state conflicts
+  workers: 1,  // Sequential execution to avoid state conflicts
   reporter: [
     ['html', { outputFolder: 'playwright-report', open: 'never' }],
     ['monocart-reporter', {
