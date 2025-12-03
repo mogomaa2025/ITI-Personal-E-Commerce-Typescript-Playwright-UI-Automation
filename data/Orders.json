@@ -1,0 +1,11 @@
+{
+    "orders": {
+        "texts": {
+            "cancelButtonName": "Cancel Order",
+            "noOrdersFoundText": "No orders found"
+        },
+        "locators": {
+            "alertMessageSuccessLocator": ".alert-success"
+        }
+    }
+}

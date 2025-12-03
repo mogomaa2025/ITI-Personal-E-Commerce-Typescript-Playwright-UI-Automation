@@ -24,6 +24,7 @@
   "author": "Test Automation Engineer",
   "license": "MIT",
   "devDependencies": {
+    "@faker-js/faker": "^10.1.0",
     "@playwright/test": "^1.40.0",
     "@types/node": "^24.10.1",
     "monocart-reporter": "^2.9.23",

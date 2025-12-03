@@ -1,9 +1,11 @@
 {
-    "baseUrl": "http://127.0.0.1:5000",
-    "loginUrl": "http://127.0.0.1:5000/web/login",
-    "productsUrl": "http://127.0.0.1:5000/web/products",
-    "productDetailsUrl": "http://127.0.0.1:5000/web/products/1",
-    "cartUrl": "http://127.0.0.1:5000/web/cart",
-    "orderUrl": "http://127.0.0.1:5000/web/orders",
-    "orderDetailsUrl": "http://127.0.0.1:5000/web/orders/1"
+    "baseUrl": "/",
+    "loginUrl": "/web/login",
+    "registerUrl": "/web/register",
+    "productsUrl": "/web/products",
+    "productDetailsUrl": "/web/products/1",
+    "cartUrl": "/web/cart",
+    "orderUrl": "/web/orders",
+    "orderDetailsUrl": "/web/orders/1",
+    "advancedSearchUrl": "web/advanced-search"
 }

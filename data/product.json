@@ -1,0 +1,12 @@
+{
+    "searchWord": "Laptop",
+    "categoryToSelect": "Electronics",
+    "minPriceStr": "100",
+    "maxPriceStr": "1000",
+    "nonExistingProduct": "NonExistentProduct",
+    "noProductsFound": "No products found.",
+    "onlyCategorySearch": "Books",
+    "anyExistingBook": "Python",
+    "productPriceMinRangeCheck": "100",
+    "productPriceMaxRangeCheck": "1000"
+}

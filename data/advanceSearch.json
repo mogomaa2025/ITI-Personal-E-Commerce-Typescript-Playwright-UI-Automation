@@ -1,0 +1,10 @@
+{
+    "productSearchName": "laptop",
+    "category": "All Categories",
+    "minPrice": "500.00",
+    "maxPrice": "1500.00",
+    "minRate": "4",
+    "sortBy": "Name",
+    "SortOrder": "Ascending",
+    "noResultsLabel": "Start your search"
+}

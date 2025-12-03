@@ -1,0 +1,12 @@
+{
+    "cartEmptyByText": "Your cart is empty",
+    "checkoutButtonText": "Proceed to Checkout",
+    "addedToCartSuccessMessage": "Added to cart!",
+    "cartAddress": "123 Test Street",
+    "pleaseLoginToContinue": "Please login to continue",
+    "productLikesApi": "**/api/products/12/likes",
+    "cartApi": "**/api/cart",
+    "cartCountUpdateApiMessage": "Cart item updated successfully",
+    "orderApi": "**/api/orders",
+    "imageApi": "https://fastly.picsum.photos/id/**"
+}

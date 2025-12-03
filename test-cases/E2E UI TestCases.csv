@@ -1,0 +1,114 @@
+Test Case ID,User Story ID,Test Class,Test Title,Pre-condition,Test Data,Test Steps,Expected Result
+AT-TC-001,US-UI-001,AuthTests,AT-TC-001: Verify Register page loads correctly,User is on the registration page.,Valid new user credentials.,"1. Navigate to the registration page.
+2. Fill in all required fields with valid data.
+3. Click the 'Register' button.",User is redirected to the login page or a success message is displayed.
+AT-TC-002,US-UI-001,AuthTests,AT-TC-002: Verify registration with existing email fails,User is on the registration page.,Existing user email.,"1. Navigate to the registration page.
+2. Fill in the registration form with an email that is already registered.
+3. Click the 'Register' button.",An error message is displayed indicating that the email is already in use.
+AT-TC-003,US-UI-001,AuthTests,AT-TC-003: Verify registration with invalid email fails,User is on the registration page.,Invalid email format.,"1. Navigate to the registration page.
+2. Enter an invalid email format in the email field.
+3. Fill in other required fields.
+4. Click the 'Register' button.",An error message is displayed for the invalid email format.
+AT-TC-004,US-UI-001,AuthTests,AT-TC-004: Verify registration with mismatched passwords fails,User is on the registration page.,Mismatched passwords.,"1. Navigate to the registration page.
+2. Fill in the registration form.
+3. Enter a different password in the 'confirm password' field.
+4. Click the 'Register' button.",An error message is displayed indicating that the passwords do not match.
+AT-TC-005,US-UI-001,AuthTests,AT-TC-005: Verify registration functionality,User is on the registration page.,Password less than 6 characters.,"1. Navigate to the registration page.
+2. Fill in the registration form with a password of 5 characters.
+3. Click the 'Register' button.",An error message is displayed for invalid password length.
+AT-TC-006,US-UI-001,AuthTests,AT-TC-006: Verify registration functionality,User is on the registration page.,Password without numbers.,"1. Navigate to the registration page.
+2. Fill in the registration form with a password that does not contain numbers.
+3. Click the 'Register' button.",An error message is displayed indicating that the password must contain at least one number.
+AT-TC-007,US-UI-001,AuthTests,AT-TC-007: Verify registration functionality,User is on the registration page.,Password without letters.,"1. Navigate to the registration page.
+2. Fill in the registration form with a password that does not contain letters.
+3. Click the 'Register' button.",An error message is displayed indicating that the password must contain at least one letter.
+AT-TC-008,US-UI-002,AuthTests,AT-TC-008: Verify registration functionality,User has a valid account.,Valid registered user credentials.,"1. Navigate to the login page.
+2. Enter a valid registered email and password.
+3. Click the 'Login' button.",User is redirected to the home page or their dashboard.
+AT-TC-009,US-UI-002,AuthTests,AT-TC-009: Verify registration functionality,User has a valid account.,Incorrect password.,"1. Navigate to the login page.
+2. Enter a valid registered email and an incorrect password.
+3. Click the 'Login' button.",An error message is displayed for invalid credentials.
+AT-TC-010,US-UI-002,AuthTests,AT-TC-010: Verify registration functionality,User is on the login page.,Unregistered email.,"1. Navigate to the login page.
+2. Enter an email that is not registered.
+3. Enter a password.
+4. Click the 'Login' button.",An error message is displayed for invalid credentials.
+AT-TC-011,US-UI-002,AuthTests,AT-TC-011: Verify login with empty email field fails,User is on the login page.,Empty email field.,"1. Navigate to the login page.
+2. Leave the email field empty.
+3. Enter a valid password.
+4. Click the 'Login' button.",An error message is displayed for the empty email field.
+AT-TC-012,US-UI-002,AuthTests,AT-TC-012: Verify login with empty password field fails,User is on the login page.,Empty password field.,"1. Navigate to the login page.
+2. Enter a valid email.
+3. Leave the password field empty.
+4. Click the 'Login' button.",An error message is displayed for the empty password field.
+AT-TC-013,US-UI-002,AuthTests,AT-TC-013: Verify login with empty email field fails,User is on the login page.,Empty email and password fields.,"1. Navigate to the login page.
+2. Leave both email and password fields empty.
+3. Click the 'Login' button.",An error message is displayed for empty credentials.
+AT-TC-014,US-UI-002,AuthTests,AT-TC-014: Verify login functionality,User is on the login page.,Password with 5 characters (min length - 1).,"1. Navigate to the login page.
+2. Enter a valid email.
+3. Enter a password with 5 characters.
+4. Click the 'Login' button.",An error message is displayed for invalid password length.
+AT-TC-015,US-UI-002,AuthTests,AT-TC-015: Verify login functionality,User is on the login page.,Password with 6 characters (min length).,"1. Navigate to the login page.
+2. Enter a valid email.
+3. Enter a password with 6 characters.
+4. Click the 'Login' button.",User is redirected to the home page or their dashboard.
+AT-TC-016,US-UI-002,AuthTests,AT-TC-016: Verify login functionality,User is on the login page.,Password with 20 characters (max length).,"1. Navigate to the login page.
+2. Enter a valid email.
+3. Enter a password with 20 characters.
+4. Click the 'Login' button.",User is redirected to the home page or their dashboard.
+AT-TC-017,US-UI-002,AuthTests,AT-TC-017: Verify login functionality,User is on the login page.,Password with 21 characters (max length + 1).,"1. Navigate to the login page.
+2. Enter a valid email.
+3. Enter a password with 21 characters.
+4. Click the 'Login' button.",An error message is displayed for invalid password length.
+AT-TC-018,US-UI-003,AuthTests,AT-TC-018: Verify successful user logout,User is logged in.,N/A,"1. Log in to the application.
+2. Click on the 'Logout' button.",User is logged out and redirected to the home page.
+PT-TC-001,US-UI-004,ProductTests,PT-TC-001: View products list,N/A,N/A,1. Navigate to the products page.,"A list of products is displayed, each with a name, image, and price."
+PT-TC-002,US-UI-005,ProductTests,PT-TC-002: View product details,Products are available.,A valid product ID.,"1. Navigate to the products page.
+2. Click on a product.","The user is redirected to the product detail page, showing more information about the product."
+PT-TC-003,US-UI-006,ProductTests,PT-TC-003: 1. Use the search bar to search for a product.,Products are available.,A search keyword.,1. Use the search bar to search for a product.,Products matching the search term are displayed.
+PT-TC-004,US-UI-006,ProductTests,PT-TC-004: 1. Use the search bar to search for a product that does not exist.,Products are available.,A non-existent product keyword.,1. Use the search bar to search for a product that does not exist.,A message indicating 'No products found' is displayed.
+PT-TC-005,US-UI-007,ProductTests,PT-TC-005: Verify product filter functionality,Products are available.,A valid category.,"1. On the products page, select a category from the filter options.",Only products belonging to the selected category are displayed.
+PT-TC-006,US-UI-007,ProductTests,PT-TC-006: Verify product filter functionality,Products are available.,A valid price range.,"1. On the products page, set a price range in the filter options.",Only products within the selected price range are displayed.
+PT-TC-007,US-UI-017,ProductTests,PT-TC-007: Verify product pagination,Products are displayed across multiple pages.,N/A,"1. Navigate to the products page.
+2. Click on a page number in the pagination control.",The corresponding page of products is displayed.
+PT-TC-008,US-UI-018,ProductTests,PT-TC-008: 1. Navigate to a product page.,User is logged in and is on a product page.,N/A,"1. Navigate to a product page.
+2. Click the 'Like' button.",The like count for the product increases.
+PT-TC-009,US-UI-018,ProductTests,PT-TC-009: 1. Like a product.,User has liked a product.,N/A,"1. Like a product.
+2. Click the 'Unlike' button.",The like count for the product decreases.
+CT-TC-001,US-UI-008,CartTests,CT-TC-001: Verify guest can't access cart page,User is not logged in,N/A,1. Navigate to /web/cart,See alert message 'Please login to continue' or similar login requirement message
+CT-TC-002,US-UI-009,CartTests,CT-TC-002: Verify  users can add products to cart,User is logged in and navigates to cart,N/A,1. Click 'Add to Cart' button for any product,See 'Added to cart!' alert and cart badge increment
+CT-TC-003,US-UI-010,CartTests,CT-TC-003: Verify logged-in user can see empty cart state,User is logged in and navigates to cart,N/A,1. Navigate to /web/cart,"See 'Your cart is empty' label, Total: $0.00, Subtotal: $0.00, and available buttons"
+CT-TC-004,US-UI-011,CartTests,CT-TC-004: Verify logged-in user can add products and see them in cart,User is logged in,N/A,1. Go to products page 2. Add product to cart 3. Navigate to cart,"See product in cart with name, price, quantity, item total and correct calculations"
+CT-TC-005,US-UI-025,CartTests,CT-TC-005: Verify user can increase item quantity and calculations update,User has items in cart,N/A,1. Navigate to cart 2. Click '+' button for an item,"Item quantity increases, item total recalculates, cart subtotal and total update"
+CT-TC-006,,CartTests,CT-TC-006: Verify user can decrease item quantity and calculations update,User has items in cart with quantity > 1,N/A,1. Navigate to cart 2. Click '-' button for an item,"Item quantity decreases, item total recalculates, cart subtotal and total update"
+CT-TC-007,,CartTests,CT-TC-007: Verify user can set specific quantity and calculations update,User has items in cart,N/A,1. Navigate to cart 2. Enter specific quantity in quantity input,"Item quantity updates, item total recalculates, cart subtotal and total update"
+CT-TC-008,,CartTests,CT-TC-008: Verify user can remove individual items from cart,User has multiple items in cart,N/A,1. Navigate to cart 2. Click 'Remove' button for an item,"Selected item disappears, cart badge and calculations update accordingly"
+CT-TC-009,,CartTests,CT-TC-009: Verify user can clear all items from cart,User has items in cart,N/A,1. Navigate to cart 2. Click 'Clear Cart' button,Cart becomes empty with appropriate empty state messages
+CT-TC-010,,CartTests,CT-TC-010: Verify all monetary values follow $XX.XX format,User has items in cart,N/A,1. Navigate to cart 2. Observe all prices and totals,"All prices, item totals, subtotal and total follow $XX.XX format with 2 decimal places"
+CT-TC-011,,CartTests,CT-TC-011: Verify checkout process works when cart has items,User has items in cart and is logged in,"validAddress': '123 Test Street, City, Country' ",1. Navigate to cart 2. Click 'Proceed to Checkout' button,Shipping address field accepts and retains the entered address
+CT-TC-012,,CartTests,CT-TC-012: Verify user can't checkout with empty shipping address,User is on checkout page, 'invalidAddress': '' ,1. Navigate to cart 2. Click 'Proceed to Checkout' button 4. Enter empty address,user can't checkout with empty address
+CT-TC-014,,CartTests,CT-TC-013: Verify system handles invalid zero quantities,User has items in cart, 'invalidQuantities': [0] ,1. Enter invalid quantity (0),System handles invalid input and remove item from cart
+CT-TC-011,,CartTests,CT-TC-014: Verify system handles invalid -5 negative quantities,User has items in cart,invalidQuantities': [-5] ,1. Enter invalid quantity (-5),System handles invalid input and remove item from cart
+CT-TC-012,,CartTests,CT-TC-015: Verify system handles invalid 999999 quantities,User has items in cart, 'invalidQuantities': [999999] ,"1. Add to cart 2, Navigate to cart 3. make quantity to 99999 4. checkout with valid address",alert message appears insufficient stock
+CT-TC-014,,CartTests,CT-TC-016: Verify cart state persists after navigation,User has items in cart,N/A,1. Navigate away from cart 2. Return to cart,Cart contents and calculations remain unchanged after navigation
+OT-TC-001,US-UI-012,OrderTests,CT-TC-005: Verifiy product checkout,User has items in the cart.,N/A,"1. Navigate to the cart page.
+2. Click the 'Checkout' button.",The user is redirected to the order page.
+OT-TC-002,US-UI-013,OrderTests,OT-TC-002: 1. Proceed to the checkout page.,User is on the checkout page.,Valid shipping information.,"1. Proceed to the checkout page.
+2. Fill in the shipping address form with valid data.
+3. Click the 'Place Order' button.","An order confirmation message is displayed, and the order appears in the user's order history."
+OT-TC-003,US-UI-013,OrderTests,OT-TC-003: 1. Proceed to the checkout page.,User is on the checkout page.,Empty shipping address.,"1. Proceed to the checkout page.
+2. Leave the shipping address fields empty.
+3. Click the 'Place Order' button.","An error message is displayed, prompting the user to fill in the shipping address."
+OT-TC-004,US-UI-014,OrderTests,OT-TC-004: 1. Log in and navigate to the 'My Orders' page.,User is logged in and has placed orders.,N/A,1. Log in and navigate to the 'My Orders' page.,A list of the user's past orders is displayed.
+OT-TC-005,US-UI-026,OrderTests,OT-TC-005: 1. Navigate to the 'My Orders' page.,User has placed orders with different statuses.,An order status.,"1. Navigate to the 'My Orders' page.
+2. Click on a status filter (e.g., 'Pending').",Only orders with the selected status are displayed.
+OT-TC-006,US-UI-027,OrderTests,OT-TC-006: 1. Place an order and ensure it is in 'pending' status.,User has a pending order.,A valid order ID.,"1. Place an order and ensure it is in 'pending' status.
+2. Navigate to the 'My Orders' page.
+3. Click the 'Cancel Order' button for the pending order.",",The order status changes to 'cancelled'."
+OT-TC-007,US-UI-030,OrderTests,"OT-TC-007: 1. On a product page, click the 'Buy Now' button.",User is on a product page.,A valid product ID.,"1. On a product page, click the 'Buy Now' button.",The user is taken directly to the checkout page with the item in their cart.
+AST-TC-001,US-UI-033,AdvancedSearchTests,AST-TC-001: Complete Advanced Search Form,N/A,Valid search criteria.,"1. Navigate to the advanced search page.
+2. Enter search criteria.
+3. Click the 'Search' button.",Products matching the criteria are displayed.
+AST-TC-002,US-UI-033,AdvancedSearchTests,AST-TC-002: Clear Advanced Search Form,N/A,Valid search criteria.,"1. Navigate to the advanced search page.
+2. Enter search criteria.
+3. Click the 'Search' button.
+4. Click 'Clear' button",Products  should clear.

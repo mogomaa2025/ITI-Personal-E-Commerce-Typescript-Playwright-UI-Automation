@@ -20,7 +20,7 @@ export class CheckoutPage extends BasePage {
   constructor(page: Page) {
     super(page);
     // Initialize checkout heading locator - looks for h1 or h2 with "Checkout" text
-    this.checkoutHeading = page.locator('h1:has-text("Checkout"), h2:has-text("Checkout")').first();
+    this.checkoutHeading = page.locator('h1').filter({ hasText: 'Checkout' }).or(page.locator('h2').filter({ hasText: 'Checkout' })).first();
     // Initialize billing form locator - looks for element with class 'billing-form' or form with id containing 'billing'
     this.billingForm = page.locator('.billing-form, form[id*="billing"]').first();
     // Initialize shipping form locator - looks for element with class 'shipping-form' or form with id containing 'shipping'
@@ -30,15 +30,15 @@ export class CheckoutPage extends BasePage {
     // Initialize order summary locator - looks for element with class 'order-summary' or element with id containing 'order-summary'
     this.orderSummary = page.locator('.order-summary, [id*="order-summary"]').first();
     // Initialize order total locator - looks for element with class 'order-total', id containing 'order-total', or paragraph with "Total" text
-    this.orderTotal = page.locator('.order-total, [id*="order-total"], p:has-text("Total")').first();
+    this.orderTotal = page.locator('.order-total, [id*="order-total"]').or(page.locator('p').filter({ hasText: 'Total' })).first();
     // Initialize place order button locator - looks for button with class 'place-order', id containing 'place-order', or button with "Place Order" text
-    this.placeOrderButton = page.locator('button.place-order, button[id*="place-order"], button:has-text("Place Order")').first();
+    this.placeOrderButton = page.locator('button.place-order, button[id*="place-order"]').or(page.locator('button').filter({ hasText: 'Place Order' })).first();
     // Initialize back to cart button locator - looks for button with class 'back-to-cart', id containing 'back-to-cart', or link with "Back to Cart" text
-    this.backToCartButton = page.locator('button.back-to-cart, button[id*="back-to-cart"], a:has-text("Back to Cart")').first();
+    this.backToCartButton = page.locator('button.back-to-cart, button[id*="back-to-cart"]').or(page.locator('a').filter({ hasText: 'Back to Cart' })).first();
     // Initialize shipping address input - looks for input with placeholder containing "address" or id/name containing "shipping" or "address"
     this.shippingAddressInput = page.locator('input[placeholder*="address" i], input[placeholder*="shipping" i], input[id*="shipping"], input[id*="address"], input[name*="shipping"], input[name*="address"]').first();
     // Initialize submit button - looks for button with type submit or button with text "Submit", "Place Order", "Complete Order"
-    this.submitButton = page.locator('button[type="submit"], button:has-text("Submit"), button:has-text("Place Order"), button:has-text("Complete Order")').first();
+    this.submitButton = page.locator('button[type="submit"]').or(page.locator('button').filter({ hasText: 'Submit' })).or(page.locator('button').filter({ hasText: 'Place Order' })).or(page.locator('button').filter({ hasText: 'Complete Order' })).first();
   }
 
   async navigateTo(): Promise<void> {
