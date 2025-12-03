@@ -165,7 +165,7 @@ test.describe('Products Tests', () => {
     await expect(productsPage.pagination).toMatchAriaSnapshot(productsPage.paginationSnapshot);
     await expect(productsPage.paginationActiveButton).toBeVisible(); // if there are more than active it will make exception
     await productsPage.paginationButton.nth(1).click();
-    expect(await productsPage.productName.first()).not.toContainText(productAName!);
+    await expect(await productsPage.productName.first()).not.toContainText(productAName!);
   });
 
 });

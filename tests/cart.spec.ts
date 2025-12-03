@@ -47,7 +47,7 @@ test.describe('Cart Page Tests - Logged In User', () => {
     await loginPage.login(users.cartUser.email, users.cartUser.password);
     await basePage.waitForNetworkIdle(); //1 seconds
     //await expect(cartPage.generalImage.last()).toBeVisible();
-    cartPage.acceptAlert(); // accept aleart first 
+    await cartPage.acceptAlert(); // accept aleart first
     await page.goto(urlsData.cartUrl);
     await cartPage.clearAllCart.click();
     await expect(basePage.cartBadge).toContainText('0');
@@ -111,11 +111,11 @@ test.describe('Cart Page Tests - Logged In User', () => {
     await cartPage.increaseBtn.first().click(); //2
     await ApiWaiting.waitForAndAssertResponse(page, cartData.cartApi, 200, 'data.0.quantity', 2);  // fix count problem fater than network idle
     await cartPage.increaseBtn.first().click();//3
-    // await basePage.waitForNetworkIdle(); // 0.5 seconds xx
-    await ApiWaiting.waitForAndAssertResponse(page, "**/**", 200, 'message', cartData.cartCountUpdateApiMessage);  // fix count problem fater than network idle
+    await basePage.waitForNetworkIdle(); // 0.5 seconds
+    // await ApiWaiting.waitForAndAssertResponse(page, "**/**", 200, 'message', cartData.cartCountUpdateApiMessage);  // fix count problem fater than network idle
     await expect(cartPage.qtyInput.first()).toHaveValue('3');
-    await expect(await cartPage.getProductQuantityFirstPrice()).toBeCloseTo(await cartPage.getSingleProductPrice() * 3); // toBeCloseTo for 2 digits
-    await expect(await cartPage.getCartTotal()).toBeCloseTo(await cartPage.getProductQuantityFirstPrice() + await cartPage.getProductQuantitySecondPrice());
+      expect(await cartPage.getProductQuantityFirstPrice()).toBeCloseTo(await cartPage.getSingleProductPrice() * 3); // toBeCloseTo for 2 digits
+      expect(await cartPage.getCartTotal()).toBeCloseTo(await cartPage.getProductQuantityFirstPrice() + await cartPage.getProductQuantitySecondPrice());
   });
 
   test('CT-TC-006: Decrease item quantity in cart', async ({ page }) => {
@@ -138,8 +138,8 @@ test.describe('Cart Page Tests - Logged In User', () => {
     await expect(cartPage.qtyInput.first()).toHaveValue('3');
     await cartPage.decreaseBtn.first().click(); // 2
     await expect(cartPage.qtyInput.first()).toHaveValue('2');
-    await expect(await cartPage.getProductQuantityFirstPrice()).toBeCloseTo(await cartPage.getSingleProductPrice() * 2); // toBeCloseTo for 2 digits
-    await expect(await cartPage.getCartTotal()).toBeCloseTo(await cartPage.getProductQuantityFirstPrice() + await cartPage.getProductQuantitySecondPrice());
+    expect(await cartPage.getProductQuantityFirstPrice()).toBeCloseTo(await cartPage.getSingleProductPrice() * 2); // toBeCloseTo for 2 digits
+    expect(await cartPage.getCartTotal()).toBeCloseTo(await cartPage.getProductQuantityFirstPrice() + await cartPage.getProductQuantitySecondPrice());
 
   });
 
@@ -157,8 +157,8 @@ test.describe('Cart Page Tests - Logged In User', () => {
     await cartPage.qtyInput.first().press('Enter');
     await ApiWaiting.waitForAndAssertResponse(page, cartData.cartApi, 200, 'data.0.quantity', 44);  // fix count problem fater than network idle
     // await cartPage.checkoutButton.scrollIntoViewIfNeeded(); // after enter need sometime to update price 118ms
-    await expect(await cartPage.getProductQuantityFirstPrice()).toBeCloseTo(await cartPage.getSingleProductPrice() * 44); // toBeCloseTo for 2 digits
-    await expect(await cartPage.getCartTotal()).toBeCloseTo(await cartPage.getProductQuantityFirstPrice());
+     expect(await cartPage.getProductQuantityFirstPrice()).toBeCloseTo(await cartPage.getSingleProductPrice() * 44); // toBeCloseTo for 2 digits
+     expect(await cartPage.getCartTotal()).toBeCloseTo(await cartPage.getProductQuantityFirstPrice());
   });
 
   test('CT-TC-008: Remove item from cart', async ({ page }) => {

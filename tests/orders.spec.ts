@@ -41,7 +41,7 @@ test.describe('Order System Tests', () => {
     // Navigate to cart page first
     await page.goto(urlsData.cartUrl);
     await basePage.waitForNetworkIdle();
-    cartPage.acceptAlert(); // accept alert first
+    await cartPage.acceptAlert(); // accept alert first
     // Only try to clear cart if it exists
     const clearButton = cartPage.clearAllCart;
     if (await clearButton.isVisible({ timeout: 3000 }).catch(() => false)) {
@@ -185,6 +185,9 @@ test.describe('Order System Tests', () => {
     // await expect(orderPage.pageHeading).toBeVisible();
     await expect(orderPage.noOrdersMessage).not.toBeVisible();
     await orderPage.pendingTab.click();
-    await expect(orderPage.ordersList.last()).not.toContainText('processing' || 'shipped' || 'delivered');
+      await expect(orderPage.ordersList.last()).not.toContainText('processing');
+      await expect(orderPage.ordersList.last()).not.toContainText('shipped');
+      await expect(orderPage.ordersList.last()).not.toContainText('delivered');
+
   });
 });
