@@ -17,12 +17,14 @@ export class LoginPage extends BasePage {
   readonly loginFormSnapshot: string;
   readonly emailPlaceholder: Locator;
   readonly passwordPlaceholder: Locator;
+    readonly pleaseLoginMessage: Locator;
 
   constructor(page: Page) {
     super(page);
 
     // by locators
     this.loginCart = this.page.locator('#login-card');
+
 
     // by roles
     this.pageTitle = this.page.getByRole('heading', { name: 'Login to Your Account' });
@@ -38,6 +40,7 @@ export class LoginPage extends BasePage {
     //by texts
     this.errorMessageAlert = this.page.getByText("Invalid credentials");
     this.successMessageAlert = this.page.getByText("Login successful!");
+    this.pleaseLoginMessage = this.page.getByText("Please login to access your account.");
 
 
     //by snapshots

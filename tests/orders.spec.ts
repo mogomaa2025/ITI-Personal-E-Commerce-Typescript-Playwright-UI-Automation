@@ -43,11 +43,14 @@ test.describe('Order System Tests', () => {
     await basePage.waitForNetworkIdle();
     await cartPage.acceptAlert(); // accept alert first
     // Only try to clear cart if it exists
-    const clearButton = cartPage.clearAllCart;
-    if (await clearButton.isVisible({ timeout: 3000 }).catch(() => false)) {
-      await clearButton.click();
+      await cartPage.clearAllCart.click();
       await expect(basePage.cartBadge).toContainText('0');
-    }
+      await expect(cartPage.cartEmptyLabel).toContainText(cartData.cartEmptyByText);
+    // const clearButton = cartPage.clearAllCart;
+    // if (await clearButton.isVisible({ timeout: 3000 }).catch(() => false)) {
+    //   await clearButton.click();
+    //   await expect(basePage.cartBadge).toContainText('0');
+    // }
   });
 
   // OT-TC-001: Verify that clicking checkout button shows the checkout prompt then cancel it

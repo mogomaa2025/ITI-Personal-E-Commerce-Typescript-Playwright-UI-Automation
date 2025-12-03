@@ -48,7 +48,7 @@ test.describe('Products Tests', () => {
 
     await page.goto(urlsData.loginUrl);
     await basePage.waitForNetworkIdle(); //1 seconds
-    await loginPage.login(users.cartUser.email, users.cartUser.password);
+    await loginPage.login(users.productsxUser.email, users.productsxUser.password);
     await basePage.waitForNetworkIdle(); //1 seconds
 
   });

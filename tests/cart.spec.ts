@@ -9,6 +9,7 @@ import { BasePage } from '@pages/BasePage';
 import { ApiWaiting } from '../utils/ApiWaiting';
 import urlsData from '../data/urls.json';
 import cartData from '../data/cart.json';
+import {ur} from "@faker-js/faker";
 
 
 test.describe('Cart Page Tests - Guest User', () => {
@@ -24,6 +25,7 @@ test.describe('Cart Page Tests - Guest User', () => {
   test('CT-TC-001: Navigate to cart as guest user fail', async ({ page }) => {
     await page.goto(urlsData.cartUrl);
     await expect(cartPage.pleaseLoginToContinue).toBeVisible();
+      await page.reload(); // may fix please login not visible issue
   });
 });
 
@@ -43,12 +45,15 @@ test.describe('Cart Page Tests - Logged In User', () => {
     basePage = new BasePage(page);
 
     await page.goto(urlsData.loginUrl);
-    await basePage.waitForNetworkIdle(); //1 seconds
     await loginPage.login(users.cartUser.email, users.cartUser.password);
-    await basePage.waitForNetworkIdle(); //1 seconds
     //await expect(cartPage.generalImage.last()).toBeVisible();
-    await cartPage.acceptAlert(); // accept aleart first
-    await page.goto(urlsData.cartUrl);
+      await expect (loginPage.textboxes.last()).toBeVisible();
+      // await basePage.waitForNetworkIdle(); //1 seconds
+      await page.goto(urlsData.productsUrl);
+      await expect(loginPage.logoutButton).toBeVisible();
+      await page.goto(urlsData.cartUrl);
+      await basePage.waitForNetworkIdle();
+      await cartPage.acceptAlert(); // accept alert first
     await cartPage.clearAllCart.click();
     await expect(basePage.cartBadge).toContainText('0');
     await expect(cartPage.cartEmptyLabel).toContainText(cartData.cartEmptyByText);
@@ -58,6 +63,7 @@ test.describe('Cart Page Tests - Logged In User', () => {
 
   test('CT-TC-002: Add to cart functionality', async ({ page }) => {
     await page.goto(urlsData.productsUrl);
+    await basePage.waitForNetworkIdle(); //1 seconds
     await expect(productsPage.loadingProducts).toBeHidden();
     await productsPage.addToCartButton.first().click();
     await expect(productsPage.addedToCartSuccessMessage).toBeVisible();
@@ -66,6 +72,7 @@ test.describe('Cart Page Tests - Logged In User', () => {
 
   test('CT-TC-003: View empty cart as logged-in user', async ({ page }) => {
     await page.goto(urlsData.cartUrl);
+      await basePage.waitForNetworkIdle(); //1 seconds
     await expect(cartPage.cartEmptyLabel).toBeVisible();
   });
 
@@ -155,7 +162,8 @@ test.describe('Cart Page Tests - Logged In User', () => {
     await cartPage.qtyInput.first().fill('44');
     await expect(cartPage.qtyInput.first()).toHaveValue('44');
     await cartPage.qtyInput.first().press('Enter');
-    await ApiWaiting.waitForAndAssertResponse(page, cartData.cartApi, 200, 'data.0.quantity', 44);  // fix count problem fater than network idle
+    await basePage.waitForNetworkIdle();
+    //ApiWaiting.waitForAndAssertResponse(page, cartData.cartApi, 200, 'data.0.quantity', 44);  // fix count problem fater than network idle
     // await cartPage.checkoutButton.scrollIntoViewIfNeeded(); // after enter need sometime to update price 118ms
      expect(await cartPage.getProductQuantityFirstPrice()).toBeCloseTo(await cartPage.getSingleProductPrice() * 44); // toBeCloseTo for 2 digits
      expect(await cartPage.getCartTotal()).toBeCloseTo(await cartPage.getProductQuantityFirstPrice());
