@@ -128,13 +128,21 @@ test.describe('Order System Tests', () => {
     await expect(orderPage.noOrdersMessage).not.toBeVisible();
     await expect(orderPage.snapshotmain).toMatchAriaSnapshot(orderPage.snapshottext);
     await orderPage.pendingTab.click();
-    await expect(orderPage.ordersList.last()).not.toContainText('processing' || 'shipped' || 'delivered');
+      await expect(orderPage.ordersList.last()).not.toContainText('processing');
+      await expect(orderPage.ordersList.last()).not.toContainText('shipped');
+      await expect(orderPage.ordersList.last()).not.toContainText('delivered');
     await orderPage.processingTab.click();
-    await expect(orderPage.ordersList.last()).not.toContainText('pending' || 'shipped' || 'delivered');
+      await expect(orderPage.ordersList.last()).not.toContainText('pending');
+      await expect(orderPage.ordersList.last()).not.toContainText('shipped');
+      await expect(orderPage.ordersList.last()).not.toContainText('delivered');
     await orderPage.shippedTab.click();
-    await expect(orderPage.ordersList.last()).not.toContainText('pending' || 'processing' || 'delivered');
+      await expect(orderPage.ordersList.last()).not.toContainText('pending');
+      await expect(orderPage.ordersList.last()).not.toContainText('processing');
+      await expect(orderPage.ordersList.last()).not.toContainText('delivered');
     await orderPage.deliveredTab.click();
-    await expect(orderPage.ordersList.last()).not.toContainText('pending' || 'processing' || 'shipped');
+      await expect(orderPage.ordersList.last()).not.toContainText('pending');
+      await expect(orderPage.ordersList.last()).not.toContainText('processing');
+      await expect(orderPage.ordersList.last()).not.toContainText('shipped');
   });
 
   // OT-TC-006: Verify a pending order can be cancelled
