@@ -14,27 +14,21 @@ The framework demonstrates advanced automation concepts including the Page Objec
 
 Below is a visual walkthrough of the application flow, from the landing page to product management.
 
-### User Interface & Navigation
+### Playwright Framework
 | | |
 |:---:|:---:|
 | ![UI 1](https://i.ibb.co/670vMjxr/image.png) | ![UI 2](https://i.ibb.co/SkgQNmH/image.png) |
 | ![UI 3](https://i.ibb.co/fzRr6rFz/image.png) | ![UI 4](https://i.ibb.co/0yM4Gffx/image.png) |
 | ![UI 5](https://i.ibb.co/bGKfhqx/image.png) | ![UI 6](https://i.ibb.co/mVBKDhDj/image.png) |
-
-### Product Details & Cart Flow
-| | |
 |:---:|:---:|
 | ![UI 7](https://i.ibb.co/Gh3YSWC/image.png) | ![UI 8](https://i.ibb.co/WNgGcLjX/image.png) |
 | ![UI 9](https://i.ibb.co/Dg7HY3LM/image.png) | ![UI 10](https://i.ibb.co/WWjhp96N/2025-12-27-050325-1.png) |
 
-### Admin & Backend Functionality
+### Reporting
 | | |
 |:---:|:---:|
 | ![UI 11](https://i.ibb.co/spcQv0bL/2025-12-27-050325-2.png) | ![UI 12](https://i.ibb.co/RTG0BQcC/2025-12-27-050325-3.png) |
 | ![UI 13](https://i.ibb.co/gb9zTs3C/2025-12-27-050325-4.png) | ![UI 14](https://i.ibb.co/fz45Kc3b/2025-12-27-050325-5.png) |
-
-### Additional Views
-| | |
 |:---:|:---:|
 | ![UI 15](https://i.ibb.co/fYdnH2Sv/2025-12-27-050325-6.png) | ![UI 16](https://i.ibb.co/jksvrMLr/2025-12-27-050325-7.png) |
 | ![UI 17](https://i.ibb.co/kVgc17T5/2025-12-27-050325-8.png) | |
