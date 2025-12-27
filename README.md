@@ -20,7 +20,6 @@ Below is a visual walkthrough of the application flow, from the landing page to 
 | ![UI 1](https://i.ibb.co/670vMjxr/image.png) | ![UI 2](https://i.ibb.co/SkgQNmH/image.png) |
 | ![UI 3](https://i.ibb.co/fzRr6rFz/image.png) | ![UI 4](https://i.ibb.co/0yM4Gffx/image.png) |
 | ![UI 5](https://i.ibb.co/bGKfhqx/image.png) | ![UI 6](https://i.ibb.co/mVBKDhDj/image.png) |
-|:---:|:---:|
 | ![UI 7](https://i.ibb.co/Gh3YSWC/image.png) | ![UI 8](https://i.ibb.co/WNgGcLjX/image.png) |
 | ![UI 9](https://i.ibb.co/Dg7HY3LM/image.png) | ![UI 10](https://i.ibb.co/WWjhp96N/2025-12-27-050325-1.png) |
 
